@@ -8,7 +8,7 @@ const Footer = () => {
       </p>
       <p className="text-[#E56446] hover:text-[#61B785] transition-colors duration-300">
         {/* Texto em coral com hover verde menta */}
-        Desenvolvido com todo cuidado para ter boas vendas!
+        Desenvolvido para você vender seus produtos!
       </p>
     </footer>
   )

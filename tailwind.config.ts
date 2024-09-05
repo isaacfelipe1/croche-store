@@ -6,6 +6,7 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: 'class', 
   theme: {
     extend: {
       backgroundImage: {
@@ -20,6 +21,20 @@ const config: Config = {
       },
       animation: {
         fadeIn: 'fadeIn 0.3s ease-out',
+      },
+      colors: {
+        light: {
+          background: '#FFFFFF',
+          text: '#333333',
+          primary: '#61B785',
+          secondary: '#734230',
+        },
+        dark: {
+          background: '#1A1A1A',
+          text: '#F5F5F5',
+          primary: '#61B785',
+          secondary: '#734230',
+        },
       },
     },
   },
