@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEye, FaEyeSlash, FaSpinner, FaSun, FaMoon } from 'react-icons/fa'; 
 import Modal from './modal';
+import RegisterModal from './registerModal'; 
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailValid, setIsEmailValid] = useState(true); 
   const [theme, setTheme] = useState('light'); 
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); 
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +40,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
 
       const { token } = await response.json();
       console.log('Login bem-sucedido, token recebido:', token);
+
+      // Armazena o token no localStorage e dispara o evento de armazenamento
+      localStorage.setItem('token', token);
+      window.dispatchEvent(new Event('storage')); // Dispara o evento de armazenamento
+
       onLoginSuccess(token);
     } catch (err) {
       console.error('Erro ao fazer login:', err);
@@ -52,7 +59,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
     setIsEmailValid(regex.test(email));
   };
 
-  // Função para alternar o tema
   const toggleTheme = () => {
     const html = document.documentElement;
     if (html.classList.contains('dark')) {
@@ -64,6 +70,18 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
       setTheme('dark');
       localStorage.setItem('theme', 'dark'); 
     }
+  };
+
+  const handleOpenRegisterModal = () => {
+    setIsRegisterModalOpen(true);
+  };
+
+  const handleCloseRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+  };
+
+  const handleRegisterSuccess = () => {
+    handleCloseRegisterModal(); 
   };
 
   useEffect(() => {
@@ -79,66 +97,84 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
   }, []);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md mx-auto animate-slideIn">
-        <h2 className="text-3xl font-semibold text-center mb-6 text-[#734230] dark:text-white">Login</h2>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <div className="mb-5">
-            <label htmlFor="email" className="block text-gray-600 dark:text-gray-300 font-medium mb-1">Email</label>
-            <input
-              type="email"
-              id="email"
-              className={`w-full px-4 py-3 border ${isEmailValid ? 'border-gray-300' : 'border-red-500'} rounded-lg focus:outline-none focus:ring-2 ${isEmailValid ? 'focus:ring-[#61B785]' : 'focus:ring-red-500'} transition`}
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                validateEmail(e.target.value);
-              }}
-              required
-              aria-invalid={!isEmailValid}
-            />
-            {!isEmailValid && <p className="text-red-500 text-sm">Por favor, insira um e-mail válido.</p>}
-          </div>
-          <div className="mb-5 relative">
-            <label htmlFor="password" className="block text-gray-600 dark:text-gray-300 font-medium mb-1">Senha</label>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#61B785] transition"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md mx-auto animate-slideIn">
+          <h2 className="text-3xl font-semibold text-center mb-6 text-[#734230] dark:text-white">Login</h2>
+          {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+          <form onSubmit={handleLogin}>
+            {/* Campo de Email */}
+            <div className="mb-5">
+              <label htmlFor="email" className="block text-gray-600 dark:text-gray-300 font-medium mb-1">Email</label>
+              <input
+                type="email"
+                id="email"
+                className={`w-full px-4 py-3 border ${isEmailValid ? 'border-gray-300' : 'border-red-500'} rounded-lg focus:outline-none focus:ring-2 ${isEmailValid ? 'focus:ring-[#61B785]' : 'focus:ring-red-500'} transition`}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  validateEmail(e.target.value);
+                }}
+                required
+                aria-invalid={!isEmailValid}
+              />
+              {!isEmailValid && <p className="text-red-500 text-sm">Por favor, insira um e-mail válido.</p>}
+            </div>
+            {/* Campo de Senha */}
+            <div className="mb-5 relative">
+              <label htmlFor="password" className="block text-gray-600 dark:text-gray-300 font-medium mb-1">Senha</label>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#61B785] transition"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label="Toggle password visibility"
+              >
+                {showPassword ? <FaEyeSlash size={20} className='mt-4' /> : <FaEye size={20} className='mt-4' />}
+              </button>
+            </div>
+            {/* Botão de Login */}
             <button
-              type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label="Toggle password visibility"
+              type="submit"
+              className={`w-full bg-[#61B785] text-white py-3 rounded-lg font-semibold hover:bg-[#734230] transition-colors duration-200 shadow-md hover:shadow-lg flex justify-center items-center ${
+                isLoading ? 'cursor-not-allowed opacity-50' : ''
+              }`}
+              disabled={isLoading}
             >
-              {showPassword ? <FaEyeSlash size={20} className='mt-4' /> : <FaEye size={20} className='mt-4' />}
+              {isLoading ? (
+                <FaSpinner className="animate-spin mr-2" size={20} />
+              ) : (
+                'Acessar'
+              )}
             </button>
-          </div>
-          <button
-            type="submit"
-            className={`w-full bg-[#61B785] text-white py-3 rounded-lg font-semibold hover:bg-[#734230] transition-colors duration-200 shadow-md hover:shadow-lg flex justify-center items-center ${
-              isLoading ? 'cursor-not-allowed opacity-50' : ''
-            }`}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <FaSpinner className="animate-spin mr-2" size={20} />
-            ) : (
-              'Acessar'
-            )}
+          </form>
+          {/* Botão para alternar o tema com ícone */}
+          <button onClick={toggleTheme} className="mt-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center justify-center">
+            {theme === 'dark' ? <FaSun size={20} /> : <FaMoon size={20} />}
           </button>
-        </form>
-        {/* Botão para alternar o tema com ícone */}
-        <button onClick={toggleTheme} className="mt-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center justify-center">
-          {theme === 'dark' ? <FaSun size={20} /> : <FaMoon size={20} />}
-        </button>
-      </div>
-    </Modal>
+          {/* Botão para abrir o modal de cadastro */}
+          <p className="mt-4 text-center text-gray-600 dark:text-gray-300">Não está cadastrado? 
+            <button onClick={handleOpenRegisterModal} className="text-[#734230] dark:text-white font-semibold hover:underline ml-1">
+              Cadastre-se
+            </button>
+          </p>
+        </div>
+      </Modal>
+
+      {/* Modal de Cadastro */}
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={handleCloseRegisterModal}
+        onRegisterSuccess={handleRegisterSuccess}
+      />
+    </>
   );
 };
 

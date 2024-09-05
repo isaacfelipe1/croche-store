@@ -1,14 +1,20 @@
-// src/app/components/WhatsappButton.tsx
 "use client";
 import React from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
+
 interface WhatsappButtonProps {
   phoneNumber: string;
   message: string;
+  isLoggedIn: boolean; 
 }
 
-const WhatsappButton: React.FC<WhatsappButtonProps> = ({ phoneNumber, message }) => {
+const WhatsappButton: React.FC<WhatsappButtonProps> = ({ phoneNumber, message, isLoggedIn }) => {
   const handleClick = () => {
+    if (!isLoggedIn) {
+      alert('Você precisa estar logado para realizar a compra.');
+      return;
+    }
+
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappURL, '_blank');
   };

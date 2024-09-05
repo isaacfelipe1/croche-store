@@ -4,6 +4,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { getProducts, Product } from '../app/api';
 import CategoryFilter from '../app/components/categoryFilter';
 import ImageModal from '../app/components/imageModal'; 
+import Alert from '../app/components/alert'; 
 
 const ProductsList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -15,6 +16,8 @@ const ProductsList: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState<number>(6);
   const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false);
   const [currentImage, setCurrentImage] = useState<{ url: string; alt: string } | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null); 
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,6 +33,19 @@ const ProductsList: React.FC = () => {
     };
 
     fetchProducts();
+    const token = localStorage.getItem('token');
+    setIsLoggedIn(!!token);
+
+    const handleStorageChange = () => {
+      const updatedToken = localStorage.getItem('token');
+      setIsLoggedIn(!!updatedToken);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   useEffect(() => {
@@ -46,6 +62,13 @@ const ProductsList: React.FC = () => {
   }, [selectedCategory, searchTerm, products]);
 
   const handleWhatsappPurchase = (product: Product) => {
+    const token = localStorage.getItem('token'); 
+
+    if (!token) { 
+      setAlertMessage('Você precisa estar logado para realizar a compra.');
+      return;
+    }
+
     const phoneNumber = "5581999999999"; 
     const message = `Olá! Estou interessado em comprar o produto ${product.name} na cor ${product.color} por R$${product.price}.`;
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -74,7 +97,10 @@ const ProductsList: React.FC = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8 text-[#432721]">Tapetes Crochê</h1>
-      
+
+      {/* Exibe o Alerta, se houver uma mensagem */}
+      {alertMessage && <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />}
+
       {/* Campo de Pesquisa Centralizado */}
       <div className="flex justify-center mb-6">
         <input
@@ -117,6 +143,7 @@ const ProductsList: React.FC = () => {
                   ) : product.stockQuantity >= 2 ? (
                     <p className="text-[#61B785] font-bold mb-2">Em estoque</p>
                   ) : null}
+                  {/* Botão do WhatsApp, verifica o login para redirecionamento */}
                   <button 
                     onClick={() => handleWhatsappPurchase(product)} 
                     className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
