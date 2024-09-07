@@ -1,81 +1,105 @@
-"use client";
+'use client'
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import withAuth from '../../hoc/withAuth';
-
+import React, { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import withAuth from '../../hoc/withAuth'
+import AlertModal from '../components/AlertModal'
 const EditProfile: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [nome, setNome] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [userId, setUserId] = useState<string | null>(null);
-  const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+  const [email, setEmail] = useState('')
+  const [nome, setNome] = useState('')
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [userId, setUserId] = useState<string | null>(null)
+  const [message, setMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    const token = localStorage.getItem('token');
+    const storedUserId = localStorage.getItem('userId')
+    const token = localStorage.getItem('token')
 
-    if (storedUserId && token) setUserId(storedUserId);
-    else router.push('/');
-  }, [router]);
+    if (storedUserId && token) setUserId(storedUserId)
+    else router.push('/')
+  }, [router])
 
   const handleAuthError = (error: string) => {
-    setMessage(error);
-    console.error(error);
-    setIsLoading(false);
-  };
+    setMessage(error)
+    console.error(error)
+    setIsLoading(false)
+    setIsModalOpen(true)
+  }
 
   const handleAction = async (url: string, method: string, body?: object) => {
-    const token = localStorage.getItem('token');
-    if (!userId || !token) return handleAuthError('Token de autenticação não encontrado.');
+    const token = localStorage.getItem('token')
+    if (!userId || !token)
+      return handleAuthError('Token de autenticação não encontrado.')
 
     try {
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: body ? JSON.stringify(body) : undefined,
-      });
+      })
 
-      if (!response.ok) throw new Error('Erro na operação.');
+      if (!response.ok) throw new Error('Erro na operação.')
 
       if (method === 'DELETE') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        alert('Conta excluída com sucesso!');
-        router.push('/');
+        localStorage.removeItem('token')
+        localStorage.removeItem('userId')
+        setMessage('Conta excluída com sucesso!')
+        setIsModalOpen(true)
+        router.push('/')
       } else {
-        setMessage('Perfil atualizado com sucesso!');
+        setMessage('Perfil atualizado com sucesso!')
+        setIsModalOpen(true)
       }
     } catch (error) {
-      handleAuthError('Erro na operação. Por favor, tente novamente.');
+      handleAuthError('Erro na operação. Por favor, tente novamente.')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    handleAction(`http://localhost:5207/Auth/edit/${userId}`, 'PUT', { email, nome, currentPassword, password: newPassword });
-  };
+    e.preventDefault()
+    setIsLoading(true)
+    handleAction(`http://localhost:5207/Auth/edit/${userId}`, 'PUT', {
+      email,
+      nome,
+      currentPassword,
+      password: newPassword,
+    })
+  }
 
   const handleDeleteAccount = () => {
-    if (confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.')) {
-      setIsLoading(true);
-      handleAction(`http://localhost:5207/Auth/delete/${userId}`, 'DELETE');
-    }
-  };
+    setIsConfirmModalOpen(true)
+  }
+
+  const confirmDeleteAccount = () => {
+    setIsConfirmModalOpen(false)
+    setIsLoading(true)
+    handleAction(`http://localhost:5207/Auth/delete/${userId}`, 'DELETE')
+  }
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Editar Perfil</h2>
+    <div className="max-w-md mx-auto mt-15 p-20 bg-white rounded shadow">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+        Configuração
+      </h2>
       {message && <p className="mb-4 text-center text-red-500">{message}</p>}
       <form onSubmit={handleUpdate}>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-800">Email</label>
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-800"
+          >
+            Email
+          </label>
           <input
             type="email"
             id="email"
@@ -85,7 +109,12 @@ const EditProfile: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="nome" className="block text-sm font-medium text-gray-800">Nome</label>
+          <label
+            htmlFor="nome"
+            className="block text-sm font-medium text-gray-800"
+          >
+            Nome
+          </label>
           <input
             type="text"
             id="nome"
@@ -95,7 +124,12 @@ const EditProfile: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-800">Senha Atual</label>
+          <label
+            htmlFor="currentPassword"
+            className="block text-sm font-medium text-gray-800"
+          >
+            Senha Atual
+          </label>
           <input
             type="password"
             id="currentPassword"
@@ -105,7 +139,12 @@ const EditProfile: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="newPassword" className="block text-sm font-medium text-gray-800">Nova Senha</label>
+          <label
+            htmlFor="newPassword"
+            className="block text-sm font-medium text-gray-800"
+          >
+            Nova Senha
+          </label>
           <input
             type="password"
             id="newPassword"
@@ -130,8 +169,26 @@ const EditProfile: React.FC = () => {
           Excluir Conta
         </button>
       </form>
-    </div>
-  );
-};
 
-export default withAuth(EditProfile);
+      {/* Modal para mensagens de alerta */}
+      <AlertModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Mensagem"
+        message={message}
+      />
+
+      {/* Modal de confirmação de exclusão */}
+      <AlertModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        title="Confirmação"
+        message="Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita! caso excluir sua conta, atualize sua pagina."
+        onConfirm={confirmDeleteAccount}
+        confirmButtonText="Excluir"
+      />
+    </div>
+  )
+}
+
+export default withAuth(EditProfile)

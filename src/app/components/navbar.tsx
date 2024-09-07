@@ -5,14 +5,14 @@ import { FaWhatsapp } from 'react-icons/fa';
 import SobreModal from './sobreModal';
 import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
-import RegisterModal from './registerModal'; 
+import RegisterModal from './registerModal';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSobreModalOpen, setIsSobreModalOpen] = useState(false);
   const [isContatoModalOpen, setIsContatoModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); 
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const decodeToken = (token: string): string | null => {
@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
           .join('')
       );
       const { sub } = JSON.parse(jsonPayload);
-      return sub; 
+      return sub;
     } catch (error) {
       console.error('Erro ao decodificar o token:', error);
       return null;
@@ -36,20 +36,21 @@ const Navbar: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    setUserEmail(null);
-    setIsOpen(false); 
+    setUserEmail(null); 
+    setIsOpen(false);
     console.log('Usuário deslogado, token e userId removidos.');
+    window.dispatchEvent(new Event('storage')); // Dispara o evento storage manualmente
   };
 
   const handleLoginSuccess = (token: string, userId: string) => {
-    localStorage.setItem('token', token); 
-    localStorage.setItem('userId', userId); 
+    localStorage.setItem('token', token);
+    localStorage.setItem('userId', userId);
     const email = decodeToken(token);
     if (email) {
-      setUserEmail(email); 
+      setUserEmail(email);
     }
-    setIsLoginModalOpen(false); 
-    setIsRegisterModalOpen(false); 
+    setIsLoginModalOpen(false);
+    setIsRegisterModalOpen(false);
   };
 
   useEffect(() => {
@@ -60,6 +61,24 @@ const Navbar: React.FC = () => {
         setUserEmail(email);
       }
     }
+
+    const handleStorageChange = () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const email = decodeToken(token);
+        if (email) {
+          setUserEmail(email);
+        }
+      } else {
+        setUserEmail(null); 
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const toggleMenu = () => {

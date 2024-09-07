@@ -54,6 +54,10 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
       const { token, userId } = await response.json(); 
       console.log('Cadastro bem-sucedido, token recebido:', token);
 
+      // Armazenar o token e o userId no localStorage
+      localStorage.setItem('token', token);
+      localStorage.setItem('userId', userId);
+
       onRegisterSuccess(token, userId);
     } catch (err) {
       console.error('Erro ao realizar cadastro:', err);
