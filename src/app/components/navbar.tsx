@@ -180,7 +180,7 @@ const Navbar: React.FC = () => {
               {userEmail ? (
                 <>
                   <span className="py-2 text-[#F1E4A6]">Bem-vindo, {userEmail}</span>
-                  <Link href="/painel" className="py-2 hover:text-[#61B785] transition-colors duration-300">
+                  <Link href="/painel" className="py-2 hover:text-[#61B785] transition-colors duration-300" onClick={toggleMenu}>
                     Editar Perfil
                   </Link>
                   <button onClick={handleLogout} className="py-2 hover:text-[#61B785] transition-colors duration-300">

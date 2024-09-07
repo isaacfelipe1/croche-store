@@ -15,98 +15,67 @@ const EditProfile: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedUserId = localStorage.getItem('userId');
-      const token = localStorage.getItem('token');
+    const storedUserId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
 
-      console.log('User ID:', storedUserId); 
-      console.log('Token:', token); 
-
-      if (storedUserId && token) {
-        setUserId(storedUserId);
-      } else {
-        router.push('/');
-      }
-    }
+    if (storedUserId && token) setUserId(storedUserId);
+    else router.push('/');
   }, [router]);
 
-  const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setMessage('');
+  const handleAuthError = (error: string) => {
+    setMessage(error);
+    console.error(error);
+    setIsLoading(false);
+  };
+
+  const handleAction = async (url: string, method: string, body?: object) => {
+    const token = localStorage.getItem('token');
+    if (!userId || !token) return handleAuthError('Token de autenticação não encontrado.');
 
     try {
-      if (!userId) {
-        throw new Error('User ID não encontrado. Por favor, faça o login novamente.');
-      }
-
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token de autenticação não encontrado.');
-      }
-
-      const response = await fetch(`http://localhost:5207/Auth/edit/${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, 
-        },
-        body: JSON.stringify({ email, nome, currentPassword, password: newPassword }),
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: body ? JSON.stringify(body) : undefined,
       });
 
-      if (!response.ok) {
-        throw new Error('Erro ao atualizar o perfil.');
-      }
+      if (!response.ok) throw new Error('Erro na operação.');
 
-      const result = await response.json();
-      setMessage('Perfil atualizado com sucesso!');
+      if (method === 'DELETE') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        alert('Conta excluída com sucesso!');
+        router.push('/');
+      } else {
+        setMessage('Perfil atualizado com sucesso!');
+      }
     } catch (error) {
-      console.error('Erro ao atualizar o perfil:', error);
-      setMessage('Erro ao atualizar o perfil. Por favor, tente novamente.');
+      handleAuthError('Erro na operação. Por favor, tente novamente.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDeleteAccount = async () => {
-    const confirmation = window.confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.');
-    if (!confirmation) return;
+  const handleUpdate = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    handleAction(`http://localhost:5207/Auth/edit/${userId}`, 'PUT', { email, nome, currentPassword, password: newPassword });
+  };
 
-    try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('Token de autenticação não encontrado.');
-      }
-
-      const response = await fetch(`http://localhost:5207/Auth/delete/${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao excluir a conta.');
-      }
-
-      alert('Conta excluída com sucesso!');
-      localStorage.removeItem('token');
-      localStorage.removeItem('userId');
-      router.push('/'); 
-    } catch (error) {
-      console.error('Erro ao excluir a conta:', error);
-      alert('Erro ao excluir a conta. Por favor, tente novamente.');
+  const handleDeleteAccount = () => {
+    if (confirm('Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita.')) {
+      setIsLoading(true);
+      handleAction(`http://localhost:5207/Auth/delete/${userId}`, 'DELETE');
     }
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-semibold mb-4">Editar Perfil</h2>
-      {message && <p className="mb-4 text-center">{message}</p>}
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Editar Perfil</h2>
+      {message && <p className="mb-4 text-center text-red-500">{message}</p>}
       <form onSubmit={handleUpdate}>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium">Email</label>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-800">Email</label>
           <input
             type="email"
             id="email"
@@ -116,7 +85,7 @@ const EditProfile: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="nome" className="block text-sm font-medium">Nome</label>
+          <label htmlFor="nome" className="block text-sm font-medium text-gray-800">Nome</label>
           <input
             type="text"
             id="nome"
@@ -126,7 +95,7 @@ const EditProfile: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="currentPassword" className="block text-sm font-medium">Senha Atual</label>
+          <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-800">Senha Atual</label>
           <input
             type="password"
             id="currentPassword"
@@ -136,7 +105,7 @@ const EditProfile: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="newPassword" className="block text-sm font-medium">Nova Senha</label>
+          <label htmlFor="newPassword" className="block text-sm font-medium text-gray-800">Nova Senha</label>
           <input
             type="password"
             id="newPassword"
@@ -147,14 +116,16 @@ const EditProfile: React.FC = () => {
         </div>
         <button
           type="submit"
-          className={`w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`w-full py-2 px-4 rounded hover:bg-blue-700 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          style={{ backgroundColor: '#61B785', color: '#FFFFFF' }}
           disabled={isLoading}
         >
           {isLoading ? 'Atualizando...' : 'Atualizar Perfil'}
         </button>
         <button
           onClick={handleDeleteAccount}
-          className="w-full py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 mt-4"
+          className="w-full py-2 px-4 rounded hover:bg-red-700 mt-4"
+          style={{ backgroundColor: '#734230', color: '#FFFFFF' }}
         >
           Excluir Conta
         </button>
