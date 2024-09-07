@@ -7,7 +7,7 @@ import RegisterModal from './registerModal';
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (token: string) => void;
+  onLoginSuccess: (token: string, userId: string) => void; 
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
@@ -38,14 +38,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
         throw new Error('Falha no login');
       }
 
-      const { token } = await response.json();
-      console.log('Login bem-sucedido, token recebido:', token);
+      const { token, userId } = await response.json(); 
+      console.log('Login bem-sucedido, token e userId recebidos:', token, userId);
 
-      // Armazena o token no localStorage e dispara o evento de armazenamento
       localStorage.setItem('token', token);
-      window.dispatchEvent(new Event('storage')); // Dispara o evento de armazenamento
+      localStorage.setItem('userId', userId.toString()); 
+      window.dispatchEvent(new Event('storage')); 
 
-      onLoginSuccess(token);
+      onLoginSuccess(token, userId); 
     } catch (err) {
       console.error('Erro ao fazer login:', err);
       setError('Credenciais inválidas. Por favor, tente novamente.');
@@ -74,13 +74,16 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
 
   const handleOpenRegisterModal = () => {
     setIsRegisterModalOpen(true);
+    onClose(); // Fecha o modal de login ao abrir o de registro
   };
 
   const handleCloseRegisterModal = () => {
     setIsRegisterModalOpen(false);
   };
 
-  const handleRegisterSuccess = () => {
+  const handleRegisterSuccess = (token: string, userId: string) => {
+    // Autentica o usuário imediatamente após o registro
+    onLoginSuccess(token, userId);
     handleCloseRegisterModal(); 
   };
 
@@ -172,7 +175,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
       <RegisterModal
         isOpen={isRegisterModalOpen}
         onClose={handleCloseRegisterModal}
-        onRegisterSuccess={handleRegisterSuccess}
+        onRegisterSuccess={handleRegisterSuccess} 
       />
     </>
   );

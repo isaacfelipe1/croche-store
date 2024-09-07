@@ -5,15 +5,16 @@ import { FaWhatsapp } from 'react-icons/fa';
 import SobreModal from './sobreModal';
 import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
+import RegisterModal from './registerModal'; 
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSobreModalOpen, setIsSobreModalOpen] = useState(false);
   const [isContatoModalOpen, setIsContatoModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); 
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
-  // Função para decodificar o token JWT
   const decodeToken = (token: string): string | null => {
     try {
       const base64Url = token.split('.')[1];
@@ -25,27 +26,30 @@ const Navbar: React.FC = () => {
           .join('')
       );
       const { sub } = JSON.parse(jsonPayload);
-      return sub; // Retorna o email do usuário
+      return sub; 
     } catch (error) {
       console.error('Erro ao decodificar o token:', error);
       return null;
     }
   };
 
-  // Função de Logout
   const handleLogout = () => {
-    localStorage.removeItem('token'); 
-    setUserEmail(null); 
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    setUserEmail(null);
     setIsOpen(false); 
+    console.log('Usuário deslogado, token e userId removidos.');
   };
 
-  const handleLoginSuccess = (token: string) => {
+  const handleLoginSuccess = (token: string, userId: string) => {
     localStorage.setItem('token', token); 
+    localStorage.setItem('userId', userId); 
     const email = decodeToken(token);
     if (email) {
       setUserEmail(email); 
     }
     setIsLoginModalOpen(false); 
+    setIsRegisterModalOpen(false); 
   };
 
   useEffect(() => {
@@ -78,6 +82,12 @@ const Navbar: React.FC = () => {
     setIsOpen(false);
   };
   const closeLoginModal = () => setIsLoginModalOpen(false);
+
+  const openRegisterModal = () => {
+    setIsRegisterModalOpen(true);
+    setIsOpen(false);
+  };
+  const closeRegisterModal = () => setIsRegisterModalOpen(false);
 
   return (
     <>
@@ -130,16 +140,22 @@ const Navbar: React.FC = () => {
               Sobre
             </button>
             {userEmail ? (
+              <div className="relative group">
+                <span className="py-2 px-3 text-[#F1E4A6] cursor-pointer">Bem-vindo, {userEmail}</span>
+                <div className="absolute top-full left-0 mt-1 hidden group-hover:block bg-white text-[#432721] shadow-lg rounded">
+                  <Link href="/painel" className="block px-4 py-2 hover:bg-[#61B785]">Editar Perfil</Link>
+                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-[#61B785]">Sair</button>
+                </div>
+              </div>
+            ) : (
               <>
-                <span className="py-2 px-3 text-[#F1E4A6]">Bem-vindo, {userEmail}</span>
-                <button onClick={handleLogout} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
-                  Sair
+                <button onClick={openLoginModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
+                  Login
+                </button>
+                <button onClick={openRegisterModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
+                  Cadastrar
                 </button>
               </>
-            ) : (
-              <button onClick={openLoginModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
-                Login
-              </button>
             )}
             <button onClick={openContatoModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
               Contato
@@ -164,14 +180,22 @@ const Navbar: React.FC = () => {
               {userEmail ? (
                 <>
                   <span className="py-2 text-[#F1E4A6]">Bem-vindo, {userEmail}</span>
+                  <Link href="/painel" className="py-2 hover:text-[#61B785] transition-colors duration-300">
+                    Editar Perfil
+                  </Link>
                   <button onClick={handleLogout} className="py-2 hover:text-[#61B785] transition-colors duration-300">
                     Sair
                   </button>
                 </>
               ) : (
-                <button onClick={openLoginModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
-                  Login
-                </button>
+                <>
+                  <button onClick={openLoginModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
+                    Login
+                  </button>
+                  <button onClick={openRegisterModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
+                    Cadastrar
+                  </button>
+                </>
               )}
               <button onClick={openContatoModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
                 Contato
@@ -190,6 +214,9 @@ const Navbar: React.FC = () => {
 
       {/* Modal Login */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onLoginSuccess={handleLoginSuccess} />
+
+      {/* Modal Cadastro */}
+      <RegisterModal isOpen={isRegisterModalOpen} onClose={closeRegisterModal} onRegisterSuccess={handleLoginSuccess} />
     </>
   );
 };
