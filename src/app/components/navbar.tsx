@@ -120,7 +120,7 @@ const Navbar: React.FC = () => {
           <div className="hidden lg:flex lg:items-center">
             <p className="text-[#F1E4A6] text-sm mr-6 flex items-center">
               <FaWhatsapp className="mr-2 text-xl text-[#E56446]" />
-              Nosso contato: (55) 99999-9999
+              Nosso contato: (91) 99192-1009
             </p>
           </div>
 
@@ -219,7 +219,7 @@ const Navbar: React.FC = () => {
               <button onClick={openContatoModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
                 Contato
               </button>
-              <p className="py-2 text-sm text-[#F1E4A6]">Contato: (81) 99999-9999</p>
+              <p className="py-2 text-sm text-[#F1E4A6]">Contato: (92) 99192-1009</p>
             </div>
           )}
         </div>

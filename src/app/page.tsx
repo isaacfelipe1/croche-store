@@ -18,6 +18,7 @@ const ProductsList: React.FC = () => {
   const [currentImage, setCurrentImage] = useState<{ url: string; alt: string } | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null); 
+  const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null); // Estado para o feedback da compra
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -58,6 +59,7 @@ const ProductsList: React.FC = () => {
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
+    
     setFilteredProducts(filtered);
   }, [selectedCategory, searchTerm, products]);
 
@@ -69,10 +71,14 @@ const ProductsList: React.FC = () => {
       return;
     }
 
-    const phoneNumber = "5581999999999"; 
-    const message = `Olá! Estou interessado em comprar o produto ${product.name} na cor ${product.color} por R$${product.price}.`;
+    const phoneNumber = "5592991921009"; 
+    const message = `Olá!\nEstou interessado em comprar o produto: *${product.name}*\nCor: _${product.color}_\nPreço: *R$${product.price}*\nO produto é este: ${product.imageUrl}`;
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappURL, '_blank');
+
+    // Exibe feedback de sucesso
+    setPurchaseFeedback('Redirecionando para o WhatsApp...');
+    setTimeout(() => setPurchaseFeedback(null), 3000); // Remove o feedback após 3 segundos
   };
 
   const handleShowMore = () => {
@@ -100,6 +106,11 @@ const ProductsList: React.FC = () => {
 
       {/* Exibe o Alerta, se houver uma mensagem */}
       {alertMessage && <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />}
+
+      {/* Exibe Feedback da Compra, se houver */}
+      {purchaseFeedback && (
+        <p className="text-center text-green-500 mb-4">{purchaseFeedback}</p>
+      )}
 
       {/* Campo de Pesquisa Centralizado */}
       <div className="flex justify-center mb-6">
