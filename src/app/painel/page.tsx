@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { FiLock, FiMail, FiUser } from 'react-icons/fi'
 import withAuth from '../../hoc/withAuth'
 import AlertModal from '../components/AlertModal'
 
@@ -56,7 +57,7 @@ const EditProfile: React.FC = () => {
         setIsModalOpen(true)
         router.push('/')
       } else {
-        return true 
+        return true
       }
     } catch (error) {
       handleAuthError('Erro na operação. Por favor, tente novamente.')
@@ -93,7 +94,7 @@ const EditProfile: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false)
-    setMessage('') 
+    setMessage('')
   }
 
   return (
@@ -106,49 +107,61 @@ const EditProfile: React.FC = () => {
           <label htmlFor="email" className="block text-sm font-medium text-gray-800">
             Email
           </label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 block w-full p-2 border rounded"
-          />
+          <div className="flex items-center mt-1 border rounded">
+            <FiMail className="ml-2 text-gray-500" />
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="block w-full p-2 border-none focus:outline-none"
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="nome" className="block text-sm font-medium text-gray-800">
             Nome
           </label>
-          <input
-            type="text"
-            id="nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            className="mt-1 block w-full p-2 border rounded"
-          />
+          <div className="flex items-center mt-1 border rounded">
+            <FiUser className="ml-2 text-gray-500" />
+            <input
+              type="text"
+              id="nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              className="block w-full p-2 border-none focus:outline-none"
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-800">
             Senha Atual
           </label>
-          <input
-            type="password"
-            id="currentPassword"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            className="mt-1 block w-full p-2 border rounded"
-          />
+          <div className="flex items-center mt-1 border rounded">
+            <FiLock className="ml-2 text-gray-500" />
+            <input
+              type="password"
+              id="currentPassword"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
+              className="block w-full p-2 border-none focus:outline-none"
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="newPassword" className="block text-sm font-medium text-gray-800">
             Nova Senha
           </label>
-          <input
-            type="password"
-            id="newPassword"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="mt-1 block w-full p-2 border rounded"
-          />
+          <div className="flex items-center mt-1 border rounded">
+            <FiLock className="ml-2 text-gray-500" />
+            <input
+              type="password"
+              id="newPassword"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="block w-full p-2 border-none focus:outline-none"
+            />
+          </div>
         </div>
         <button
           type="submit"

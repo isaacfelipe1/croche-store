@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { FaEye, FaEyeSlash, FaSpinner, FaSun, FaMoon } from 'react-icons/fa'; 
 import Modal from './modal';
 import RegisterModal from './registerModal'; 
+import { FiLock } from 'react-icons/fi';
 
 interface LoginModalProps {
   isOpen: boolean;
