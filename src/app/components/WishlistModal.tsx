@@ -55,13 +55,15 @@ const WishlistModal: React.FC<WishlistModalProps> = ({ isOpen, onClose }) => {
           {favoriteProducts.map((product) => (
             <li key={product.id} className="mb-4 flex items-center">
               <img
-                src={product.imageUrl}
+                src={`http://localhost:5207${product.imageUrl}`}
                 alt={product.name}
                 className="w-16 h-16 mr-4 object-cover rounded"
               />
               <div>
                 <h3 className="text-lg font-semibold text-[#432721]">{product.name}</h3>
-                <p className="text-sm text-[#432721]">Preço: R${product.price}</p>
+                <p className="text-sm text-[#432721]">
+                  Preço: R${product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </p>
               </div>
             </li>
           ))}

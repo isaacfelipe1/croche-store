@@ -1,4 +1,3 @@
-// src/app/admin/page.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -13,7 +12,7 @@ const CreateProductPage: React.FC = () => {
     const [category, setCategory] = useState('');
     const [color, setColor] = useState('');
     const [size, setSize] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
+    const [imageFile, setImageFile] = useState<File | null>(null);
     const [stockQuantity, setStockQuantity] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
@@ -21,12 +20,15 @@ const CreateProductPage: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (parseFloat(price) <= 0) {
+        // Verificação de valores de preço e quantidade em estoque
+        const parsedPrice = parseFloat(price.replace(',', '.'));
+        if (parsedPrice <= 0) {
             alert('O preço deve ser um valor positivo.');
             return;
         }
 
-        if (parseInt(stockQuantity, 10) < 0) {
+        const parsedStockQuantity = parseInt(stockQuantity, 10);
+        if (parsedStockQuantity < 0) {
             alert('A quantidade em estoque não pode ser negativa.');
             return;
         }
@@ -34,19 +36,26 @@ const CreateProductPage: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5207/api/Products', {
-                name,
-                description,
-                price: parseFloat(price),
-                category,
-                color,
-                size,
-                imageUrl,
-                stockQuantity: parseInt(stockQuantity, 10),
-            }, {
+            // Criação do objeto FormData para enviar os dados e o arquivo de imagem
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('description', description);
+            formData.append('price', parsedPrice.toString().replace('.', ',')); // Converte para string com vírgula como separador decimal
+            formData.append('category', category);
+            formData.append('color', color);
+            formData.append('size', size);
+            formData.append('stockQuantity', parsedStockQuantity.toString());
+
+            // Adiciona o arquivo de imagem ao FormData se estiver presente
+            if (imageFile) {
+                formData.append('imageFile', imageFile); // Certifique-se de que o nome corresponde ao esperado no backend
+            }
+
+            // Envio da solicitação HTTP usando axios
+            const response = await axios.post('http://localhost:5207/api/Products', formData, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
-                }
+                },
             });
 
             if (response.status === 201) {
@@ -82,13 +91,12 @@ const CreateProductPage: React.FC = () => {
                     required
                 />
                 <input
-                    type="number"
+                    type="text" // Altere para texto para permitir vírgulas como separador decimal
                     placeholder="Preço"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
                     className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
                     required
-                    min="0"
                 />
                 <input
                     type="text"
@@ -114,10 +122,8 @@ const CreateProductPage: React.FC = () => {
                     required
                 />
                 <input
-                    type="text"
-                    placeholder="URL da Imagem"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
+                    type="file"
+                    onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
                     className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
                 />
                 <input
@@ -141,4 +147,4 @@ const CreateProductPage: React.FC = () => {
     );
 };
 
-export default withAuth(CreateProductPage); // Envolva o componente com withAuth para proteger a rota
+export default withAuth(CreateProductPage);

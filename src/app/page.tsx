@@ -29,8 +29,13 @@ const ProductsList: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const data = await getProducts()
-        setProducts(data)
-        setFilteredProducts(data)
+        // Ajuste o valor do preço para o formato correto
+        const formattedData = data.map((product) => ({
+          ...product,
+          price: parseFloat(product.price.toString()), // Convertendo o preço para número
+        }))
+        setProducts(formattedData)
+        setFilteredProducts(formattedData)
       } catch (error) {
         setError('Erro ao carregar produtos')
       } finally {
@@ -98,7 +103,7 @@ const ProductsList: React.FC = () => {
     }
 
     const phoneNumber = '5592991921009'
-    const message = `Olá!\nEstou interessado em comprar o produto: *${product.name}*\nCor: _${product.color}_\nPreço: *R$${product.price}*\nO produto é este: ${product.imageUrl}`
+    const message = `Olá!\nEstou interessado em comprar o produto: *${product.name}*\nCor: _${product.color}_\nPreço: *R$${product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}*\nO produto é este: ${product.imageUrl}`
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappURL, '_blank')
 
@@ -169,11 +174,11 @@ const ProductsList: React.FC = () => {
             {filteredProducts.slice(0, visibleCount).map((product) => (
               <li
                 key={product.id}
-                className="bg-[#FDFDFD] border border-[#432721] rounded-lg shadow hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden mx-2 sm:mx-0"
+                className="bg-[#FDFDFD] border border-[#432721] rounded-lg shadow hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden mx-2 sm:mx-0 flex flex-col justify-between"
               >
                 <div className="overflow-hidden rounded-t-lg cursor-pointer relative">
                   <img
-                    src={product.imageUrl}
+                    src={`http://localhost:5207${product.imageUrl}`}
                     alt={product.name}
                     className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
                     onClick={() =>
@@ -192,32 +197,35 @@ const ProductsList: React.FC = () => {
                     )}
                   </button>
                 </div>
-                <div className="p-4">
-                  <h2 className="text-xl font-semibold text-[#432721] mb-2">
-                    {product.name}
-                  </h2>
-                  <p className="text-[#432721] mb-1">{product.description}</p>{' '}
-                  {/* Adicionando a descrição aqui */}
-                  <p className="text-[#432721] mb-1">
-                    Preço:{' '}
-                    <span className="text-[#E56446] font-bold">
-                      R${product.price}
-                    </span>
-                  </p>
-                  <p className="text-[#432721] mb-2">Cor: {product.color}</p>
-                  <p className="text-[#432721] mb-2">
-                    Quantidade: {product.stockQuantity} Un
-                  </p>
-                  {product.stockQuantity < 2 ? (
-                    <p className="text-[#E56446] font-bold mb-2">
-                      Quase acabando!
+                <div className="p-4 flex flex-col flex-grow justify-between">
+                  <div>
+                    <h2 className="text-lg font-semibold text-[#432721] mb-2 hover:text-[#E56446] transition-colors duration-200">
+                      {product.name}
+                    </h2>
+                    <p className="text-sm text-gray-700 mb-2">{product.description}</p> {/* Tamanho da fonte da descrição reduzido */}
+                    <p className="text-base text-[#432721] mb-1 font-semibold">
+                      Preço:{' '}
+                      <span className="text-[#E56446] font-bold text-xl">
+                        R${product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
                     </p>
-                  ) : product.stockQuantity >= 2 ? (
-                    <p className="text-[#61B785] font-bold mb-2">Em estoque</p>
-                  ) : null}
+                    <p className="text-sm text-[#432721] mb-2">
+                      Cor: <span className="font-medium">{product.color}</span>
+                    </p>
+                    <p className="text-sm text-[#432721] mb-2">
+                      Quantidade: <span className="font-medium">{product.stockQuantity} Un</span>
+                    </p>
+                    {product.stockQuantity < 2 ? (
+                      <p className="text-[#E56446] font-bold text-sm mb-2">
+                       Compre já, poucas unidades!
+                      </p>
+                    ) : (
+                      <p className="text-[#61B785] font-bold text-sm mb-2">Em estoque</p>
+                    )}
+                  </div>
                   <button
                     onClick={() => handleWhatsappPurchase(product)}
-                    className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
+                    className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center mt-4"
                   >
                     <FaWhatsapp className="mr-2 text-xl" /> Comprar
                   </button>
