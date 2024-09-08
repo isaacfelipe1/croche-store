@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import Modal from './modal'; 
-import { FaSpinner, FaEye, FaEyeSlash } from 'react-icons/fa';
+import React, { useState } from 'react'
+import Modal from './modal'
+import { FaSpinner, FaEye, FaEyeSlash } from 'react-icons/fa'
 
 interface RegisterModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onRegisterSuccess: (token: string, userId: string) => void; 
+  isOpen: boolean
+  onClose: () => void
+  onRegisterSuccess: (token: string, userId: string) => void
 }
 
 const RegisterModal: React.FC<RegisterModalProps> = ({
@@ -13,24 +13,33 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   onClose,
   onRegisterSuccess,
 }) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setIsLoading(true);
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
 
+    // Verifica se as senhas coincidem
     if (password !== confirmPassword) {
-      setError('As senhas não coincidem.');
-      setIsLoading(false);
-      return;
+      setError('As senhas não coincidem.')
+      setIsLoading(false)
+      return
+    }
+
+    // Verifica se a senha contém pelo menos um dígito
+    const passwordPattern = /\d/
+    if (!passwordPattern.test(password)) {
+      setError("A senha deve conter pelo menos um dígito ('0'-'9').")
+      setIsLoading(false)
+      return
     }
 
     try {
@@ -45,27 +54,27 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
           password,
           confirmPassword,
         }),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Falha no cadastro');
+        throw new Error('Falha no cadastro')
       }
 
-      const { token, userId } = await response.json(); 
-      console.log('Cadastro bem-sucedido, token recebido:', token);
+      const { token, userId } = await response.json()
+      console.log('Cadastro bem-sucedido, token recebido:', token)
 
       // Armazenar o token e o userId no localStorage
-      localStorage.setItem('token', token);
-      localStorage.setItem('userId', userId);
+      localStorage.setItem('token', token)
+      localStorage.setItem('userId', userId)
 
-      onRegisterSuccess(token, userId);
+      onRegisterSuccess(token, userId)
     } catch (err) {
-      console.error('Erro ao realizar cadastro:', err);
-      setError('Erro ao cadastrar. Por favor, tente novamente.');
+      console.error('Erro ao realizar cadastro:', err)
+      setError('Erro ao cadastrar. Por favor, tente novamente.')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -134,6 +143,12 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
                 <FaEye size={20} className="mt-4" />
               )}
             </button>
+            <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-gray-500 mt-1">
+                A senha deve conter pelo menos um dígito
+                (&apos;0&apos;-&apos;9&apos;).
+              </p>
+            </p>
           </div>
           <div className="mb-4 relative">
             <label
@@ -179,7 +194,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
         </form>
       </div>
     </Modal>
-  );
-};
+  )
+}
 
-export default RegisterModal;
+export default RegisterModal

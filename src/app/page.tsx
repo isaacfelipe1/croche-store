@@ -1,128 +1,142 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState, memo } from 'react';
-import { FaWhatsapp, FaHeart, FaRegHeart, FaSearch } from 'react-icons/fa'; // Importando ícone de pesquisa
-import { getProducts, Product } from '../app/api';
-import CategoryFilter from '../app/components/categoryFilter';
-import ImageModal from '../app/components/imageModal';
-import Alert from '../app/components/alert';
+import React, { useEffect, useState, memo } from 'react'
+import { FaWhatsapp, FaHeart, FaRegHeart, FaSearch } from 'react-icons/fa' // Importando ícone de pesquisa
+import { getProducts, Product } from '../app/api'
+import CategoryFilter from '../app/components/categoryFilter'
+import ImageModal from '../app/components/imageModal'
+import Alert from '../app/components/alert'
 
 const ProductsList: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState<string>(''); 
-  const [visibleCount, setVisibleCount] = useState<number>(6);
-  const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false);
-  const [currentImage, setCurrentImage] = useState<{ url: string; alt: string } | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string | null>(null); 
-  const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null);
-  const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
+  const [products, setProducts] = useState<Product[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [visibleCount, setVisibleCount] = useState<number>(6)
+  const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false)
+  const [currentImage, setCurrentImage] = useState<{
+    url: string
+    alt: string
+  } | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+  const [alertMessage, setAlertMessage] = useState<string | null>(null)
+  const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null)
+  const [favoriteProducts, setFavoriteProducts] = useState<number[]>([])
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProducts();
-        setProducts(data);
-        setFilteredProducts(data); 
+        const data = await getProducts()
+        setProducts(data)
+        setFilteredProducts(data)
       } catch (error) {
-        setError('Erro ao carregar produtos');
+        setError('Erro ao carregar produtos')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchProducts();
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(!!token);
+    fetchProducts()
+    const token = localStorage.getItem('token')
+    setIsLoggedIn(!!token)
 
-    const savedFavorites = JSON.parse(localStorage.getItem('favoriteProducts') || '[]');
-    setFavoriteProducts(savedFavorites);
+    const savedFavorites = JSON.parse(
+      localStorage.getItem('favoriteProducts') || '[]',
+    )
+    setFavoriteProducts(savedFavorites)
 
     const handleStorageChange = () => {
-      const updatedToken = localStorage.getItem('token');
-      setIsLoggedIn(!!updatedToken);
-    };
+      const updatedToken = localStorage.getItem('token')
+      setIsLoggedIn(!!updatedToken)
+    }
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('storage', handleStorageChange)
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
+      window.removeEventListener('storage', handleStorageChange)
+    }
+  }, [])
 
   useEffect(() => {
-    let filtered = products;
+    let filtered = products
     if (selectedCategory) {
-      filtered = filtered.filter((product) => product.category === selectedCategory);
+      filtered = filtered.filter(
+        (product) => product.category === selectedCategory,
+      )
     }
     if (searchTerm) {
       filtered = filtered.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
     }
-    
-    setFilteredProducts(filtered);
-  }, [selectedCategory, searchTerm, products]);
+
+    setFilteredProducts(filtered)
+  }, [selectedCategory, searchTerm, products])
 
   const toggleFavorite = (productId: number) => {
     if (!isLoggedIn) {
-      setAlertMessage('Você precisa estar logado para favoritar um produto.');
-      return;
+      setAlertMessage('Você precisa estar logado para favoritar um produto.')
+      return
     }
 
     const updatedFavorites = favoriteProducts.includes(productId)
       ? favoriteProducts.filter((id) => id !== productId)
-      : [...favoriteProducts, productId];
+      : [...favoriteProducts, productId]
 
-    setFavoriteProducts(updatedFavorites);
-    localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites));
-  };
+    setFavoriteProducts(updatedFavorites)
+    localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites))
+  }
 
   const handleWhatsappPurchase = (product: Product) => {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token')
 
-    if (!token) { 
-      setAlertMessage('Você precisa estar logado para realizar a compra.');
-      return;
+    if (!token) {
+      setAlertMessage('Você precisa estar logado para realizar a compra.')
+      return
     }
 
-    const phoneNumber = "5592991921009"; 
-    const message = `Olá!\nEstou interessado em comprar o produto: *${product.name}*\nCor: _${product.color}_\nPreço: *R$${product.price}*\nO produto é este: ${product.imageUrl}`;
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappURL, '_blank');
+    const phoneNumber = '5592991921009'
+    const message = `Olá!\nEstou interessado em comprar o produto: *${product.name}*\nCor: _${product.color}_\nPreço: *R$${product.price}*\nO produto é este: ${product.imageUrl}`
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+    window.open(whatsappURL, '_blank')
 
-    setPurchaseFeedback('Redirecionando para o WhatsApp...');
-    setTimeout(() => setPurchaseFeedback(null), 3000);
-  };
+    setPurchaseFeedback('Redirecionando para o WhatsApp...')
+    setTimeout(() => setPurchaseFeedback(null), 3000)
+  }
 
   const handleShowMore = () => {
-    setVisibleCount((prevCount) => prevCount + 6);
-  };
+    setVisibleCount((prevCount) => prevCount + 6)
+  }
 
   const openImageModal = (imageUrl: string, altText: string) => {
-    setCurrentImage({ url: imageUrl, alt: altText });
-    setIsImageModalOpen(true);
-  };
+    setCurrentImage({ url: imageUrl, alt: altText })
+    setIsImageModalOpen(true)
+  }
 
   const closeImageModal = () => {
-    setCurrentImage(null);
-    setIsImageModalOpen(false);
-  };
+    setCurrentImage(null)
+    setIsImageModalOpen(false)
+  }
 
-  const categories = Array.from(new Set(products.map((product) => product.category)));
+  const categories = Array.from(
+    new Set(products.map((product) => product.category)),
+  )
 
-  if (loading) return <p className="text-center text-lg mt-4">Carregando produtos...</p>;
-  if (error) return <p className="text-center text-red-500 mt-4">{error}</p>;
+  if (loading)
+    return <p className="text-center text-lg mt-4">Carregando produtos...</p>
+  if (error) return <p className="text-center text-red-500 mt-4">{error}</p>
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-[#432721]">Tapetes Crochê</h1>
+      <h1 className="text-3xl font-bold text-center mb-8 text-[#432721]">
+        Tapetes Crochê
+      </h1>
 
-      {alertMessage && <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />}
+      {alertMessage && (
+        <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />
+      )}
 
       {purchaseFeedback && (
         <p className="text-center text-green-500 mb-4">{purchaseFeedback}</p>
@@ -143,43 +157,64 @@ const ProductsList: React.FC = () => {
 
       <div className="flex flex-col md:flex-row">
         <div className="w-full md:w-1/4 mb-6 md:mb-0 md:mr-8">
-          <CategoryFilter 
-            categories={categories} 
-            selectedCategory={selectedCategory} 
-            onCategoryChange={setSelectedCategory} 
+          <CategoryFilter
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
           />
         </div>
 
         <div className="w-full md:w-3/4">
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredProducts.slice(0, visibleCount).map((product) => (
-              <li key={product.id} className="bg-[#FDFDFD] border border-[#432721] rounded-lg shadow hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden mx-2 sm:mx-0">
+              <li
+                key={product.id}
+                className="bg-[#FDFDFD] border border-[#432721] rounded-lg shadow hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden mx-2 sm:mx-0"
+              >
                 <div className="overflow-hidden rounded-t-lg cursor-pointer relative">
-                  <img 
-                    src={product.imageUrl} 
-                    alt={product.name} 
+                  <img
+                    src={product.imageUrl}
+                    alt={product.name}
                     className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
-                    onClick={() => openImageModal(product.imageUrl, product.name)}
+                    onClick={() =>
+                      openImageModal(product.imageUrl, product.name)
+                    }
                   />
                   {/* Ícone de Coração para Favoritar */}
-                  <button 
+                  <button
                     className="absolute top-2 right-2 text-[#E56446] hover:text-[#432721] transition-colors duration-200"
                     onClick={() => toggleFavorite(product.id)}
                   >
-                    {favoriteProducts.includes(product.id) ? <FaHeart size={24} /> : <FaRegHeart size={24} />}
+                    {favoriteProducts.includes(product.id) ? (
+                      <FaHeart size={24} />
+                    ) : (
+                      <FaRegHeart size={24} />
+                    )}
                   </button>
                 </div>
                 <div className="p-4">
-                  <h2 className="text-xl font-semibold text-[#432721] mb-2">{product.name}</h2>
-                  <p className="text-[#432721] mb-1">Preço: <span className="text-[#E56446] font-bold">R${product.price}</span></p>
+                  <h2 className="text-xl font-semibold text-[#432721] mb-2">
+                    {product.name}
+                  </h2>
+                  <p className="text-[#432721] mb-1">
+                    Preço:{' '}
+                    <span className="text-[#E56446] font-bold">
+                      R${product.price}
+                    </span>
+                  </p>
                   <p className="text-[#432721] mb-2">Cor: {product.color}</p>
+                  <p className="text-[#432721] mb-2">
+                    Quantidade: {product.stockQuantity} Un
+                  </p>
                   {product.stockQuantity < 2 ? (
-                    <p className="text-[#E56446] font-bold mb-2">Quase acabando!</p>
+                    <p className="text-[#E56446] font-bold mb-2">
+                      Quase acabando!
+                    </p>
                   ) : product.stockQuantity >= 2 ? (
                     <p className="text-[#61B785] font-bold mb-2">Em estoque</p>
                   ) : null}
-                  <button 
-                    onClick={() => handleWhatsappPurchase(product)} 
+                  <button
+                    onClick={() => handleWhatsappPurchase(product)}
                     className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
                   >
                     <FaWhatsapp className="mr-2 text-xl" /> Comprar
@@ -190,8 +225,8 @@ const ProductsList: React.FC = () => {
           </ul>
           {filteredProducts.length > visibleCount && (
             <div className="flex justify-center mt-6">
-              <button 
-                onClick={handleShowMore} 
+              <button
+                onClick={handleShowMore}
                 className="py-2 px-4 bg-[#432721] text-white rounded hover:bg-[#E56446] transition-colors duration-200"
               >
                 Ver mais
@@ -210,7 +245,7 @@ const ProductsList: React.FC = () => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default memo(ProductsList);
+export default memo(ProductsList)

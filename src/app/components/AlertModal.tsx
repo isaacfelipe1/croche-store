@@ -1,12 +1,12 @@
-import React from 'react';
+import React from 'react'
 
 interface AlertModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  message: string;
-  onConfirm?: () => void;
-  confirmButtonText?: string;
+  isOpen: boolean
+  onClose: () => void
+  title: string
+  message: string
+  onConfirm?: () => void
+  confirmButtonText?: string
 }
 
 const AlertModal: React.FC<AlertModalProps> = ({
@@ -17,7 +17,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
   onConfirm,
   confirmButtonText = 'OK',
 }) => {
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
@@ -42,7 +42,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AlertModal;
+export default AlertModal
