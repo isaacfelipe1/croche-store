@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { FiLock, FiMail, FiUser } from 'react-icons/fi'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import withAuth from '../../hoc/withAuth'
 import AlertModal from '../components/AlertModal'
 
@@ -16,6 +17,8 @@ const EditProfile: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -56,7 +59,6 @@ const EditProfile: React.FC = () => {
         setMessage('Conta excluída com sucesso!')
         setIsModalOpen(true)
 
-        // Dispara o evento personalizado 'accountDeleted'
         window.dispatchEvent(new CustomEvent('accountDeleted'))
 
         router.push('/')
@@ -141,30 +143,44 @@ const EditProfile: React.FC = () => {
           <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-800">
             Senha Atual
           </label>
-          <div className="flex items-center mt-1 border rounded">
+          <div className="flex items-center mt-1 border rounded relative">
             <FiLock className="ml-2 text-gray-500" />
             <input
-              type="password"
+              type={showCurrentPassword ? 'text' : 'password'}
               id="currentPassword"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               className="block w-full p-2 border-none focus:outline-none"
             />
+            <button
+              type="button"
+              className="absolute right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+            >
+              {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
         </div>
         <div className="mb-4">
           <label htmlFor="newPassword" className="block text-sm font-medium text-gray-800">
             Nova Senha
           </label>
-          <div className="flex items-center mt-1 border rounded">
+          <div className="flex items-center mt-1 border rounded relative">
             <FiLock className="ml-2 text-gray-500" />
             <input
-              type="password"
+              type={showNewPassword ? 'text' : 'password'}
               id="newPassword"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="block w-full p-2 border-none focus:outline-none"
             />
+            <button
+              type="button"
+              className="absolute right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+            >
+              {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
         </div>
         <button
