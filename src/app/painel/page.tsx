@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import withAuth from '../../hoc/withAuth'
 import AlertModal from '../components/AlertModal'
+
 const EditProfile: React.FC = () => {
   const [email, setEmail] = useState('')
   const [nome, setNome] = useState('')
@@ -55,25 +56,29 @@ const EditProfile: React.FC = () => {
         setIsModalOpen(true)
         router.push('/')
       } else {
-        setMessage('Perfil atualizado com sucesso!')
-        setIsModalOpen(true)
+        return true 
       }
     } catch (error) {
       handleAuthError('Erro na operação. Por favor, tente novamente.')
+      return false
     } finally {
       setIsLoading(false)
     }
   }
 
-  const handleUpdate = (e: React.FormEvent) => {
+  const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    handleAction(`http://localhost:5207/Auth/edit/${userId}`, 'PUT', {
+    const success = await handleAction(`http://localhost:5207/Auth/edit/${userId}`, 'PUT', {
       email,
       nome,
       currentPassword,
       password: newPassword,
     })
+    if (success) {
+      setMessage('Perfil atualizado com sucesso!')
+      setIsModalOpen(true)
+    }
   }
 
   const handleDeleteAccount = () => {
@@ -86,18 +91,19 @@ const EditProfile: React.FC = () => {
     handleAction(`http://localhost:5207/Auth/delete/${userId}`, 'DELETE')
   }
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setMessage('') 
+  }
+
   return (
     <div className="max-w-md mx-auto mt-15 p-20 bg-white rounded shadow">
       <h2 className="text-2xl font-semibold mb-4 text-gray-800">
         Configuração
       </h2>
-      {message && <p className="mb-4 text-center text-red-500">{message}</p>}
       <form onSubmit={handleUpdate}>
         <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-800"
-          >
+          <label htmlFor="email" className="block text-sm font-medium text-gray-800">
             Email
           </label>
           <input
@@ -109,10 +115,7 @@ const EditProfile: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label
-            htmlFor="nome"
-            className="block text-sm font-medium text-gray-800"
-          >
+          <label htmlFor="nome" className="block text-sm font-medium text-gray-800">
             Nome
           </label>
           <input
@@ -124,10 +127,7 @@ const EditProfile: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label
-            htmlFor="currentPassword"
-            className="block text-sm font-medium text-gray-800"
-          >
+          <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-800">
             Senha Atual
           </label>
           <input
@@ -139,10 +139,7 @@ const EditProfile: React.FC = () => {
           />
         </div>
         <div className="mb-4">
-          <label
-            htmlFor="newPassword"
-            className="block text-sm font-medium text-gray-800"
-          >
+          <label htmlFor="newPassword" className="block text-sm font-medium text-gray-800">
             Nova Senha
           </label>
           <input
@@ -165,25 +162,24 @@ const EditProfile: React.FC = () => {
           onClick={handleDeleteAccount}
           className="w-full py-2 px-4 rounded hover:bg-red-700 mt-4"
           style={{ backgroundColor: '#734230', color: '#FFFFFF' }}
+          type="button"
         >
           Excluir Conta
         </button>
       </form>
 
-      {/* Modal para mensagens de alerta */}
       <AlertModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
         title="Mensagem"
         message={message}
       />
 
-      {/* Modal de confirmação de exclusão */}
       <AlertModal
         isOpen={isConfirmModalOpen}
         onClose={() => setIsConfirmModalOpen(false)}
         title="Confirmação"
-        message="Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita! caso excluir sua conta, atualize sua pagina."
+        message="Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita!"
         onConfirm={confirmDeleteAccount}
         confirmButtonText="Excluir"
       />
