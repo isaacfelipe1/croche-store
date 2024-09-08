@@ -45,7 +45,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
       });
 
       if (!response.ok) throw new Error('Falha no cadastro');
-      
+
       const { token, userId } = await response.json();
       localStorage.setItem('token', token);
       localStorage.setItem('userId', userId);
@@ -68,25 +68,31 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
               <label htmlFor={field} className="block text-gray-600 dark:text-gray-300 font-medium text-sm mb-1">
                 {field === 'confirmPassword' ? 'Confirmar Senha' : field.charAt(0).toUpperCase() + field.slice(1)}
               </label>
-              <input
-                type={showPassword[field as keyof typeof showPassword] ? 'text' : field.includes('password') ? 'password' : 'text'}
-                id={field}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#61B785] text-sm"
-                value={formData[field as keyof typeof formData]}
-                onChange={handleInputChange}
-                required
-              />
+              <div className="relative">
+                <input
+                  type={showPassword[field as keyof typeof showPassword] ? 'text' : field.includes('password') ? 'password' : 'text'}
+                  id={field}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#61B785] focus:ring-1 focus:ring-[#61B785] text-sm"
+                  value={formData[field as keyof typeof formData]}
+                  onChange={handleInputChange}
+                  required
+                />
+                {field.includes('password') && (
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700 focus:outline-none"
+                    onClick={() => togglePasswordVisibility(field)}
+                  >
+                    {showPassword[field as keyof typeof showPassword] ? (
+                      <FaEyeSlash className="w-5 h-5" />
+                    ) : (
+                      <FaEye className="w-5 h-5" />
+                    )}
+                  </button>
+                )}
+              </div>
               {field === 'password' && (
                 <p className="text-xs text-gray-500 mt-1">A senha deve conter pelo menos um dígito (&apos;0&apos;-&apos;9&apos;).</p>
-              )}
-              {field.includes('password') && (
-                <button
-                  type="button"
-                  className="absolute right-2 inset-y-0.5 text-gray-500"
-                  onClick={() => togglePasswordVisibility(field)}
-                >
-                  {showPassword[field as keyof typeof showPassword] ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
-                </button>
               )}
             </div>
           ))}
