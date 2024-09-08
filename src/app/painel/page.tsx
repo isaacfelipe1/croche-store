@@ -55,6 +55,10 @@ const EditProfile: React.FC = () => {
         localStorage.removeItem('userId')
         setMessage('Conta excluída com sucesso!')
         setIsModalOpen(true)
+
+        // Dispara o evento personalizado 'accountDeleted'
+        window.dispatchEvent(new CustomEvent('accountDeleted'))
+
         router.push('/')
       } else {
         return true

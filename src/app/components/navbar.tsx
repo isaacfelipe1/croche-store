@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -36,10 +37,10 @@ const Navbar: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
-    setUserEmail(null); 
+    setUserEmail(null);
     setIsOpen(false);
     console.log('Usuário deslogado, token e userId removidos.');
-    window.dispatchEvent(new Event('storage')); // Dispara o evento storage manualmente
+    window.dispatchEvent(new Event('storage')); 
   };
 
   const handleLoginSuccess = (token: string, userId: string) => {
@@ -70,14 +71,20 @@ const Navbar: React.FC = () => {
           setUserEmail(email);
         }
       } else {
-        setUserEmail(null); 
+        setUserEmail(null);
       }
     };
 
+    const handleAccountDeleted = () => {
+      setUserEmail(null);
+    };
+
     window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('accountDeleted', handleAccountDeleted);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('accountDeleted', handleAccountDeleted);
     };
   }, []);
 
