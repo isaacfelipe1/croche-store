@@ -176,7 +176,13 @@ const Navbar: React.FC = () => {
                 <span className="py-2 px-3 text-[#F1E4A6] cursor-pointer">Bem-vindo, {userEmail}</span>
                 <div className="absolute top-full left-0 mt-1 hidden group-hover:block bg-white text-[#432721] shadow-lg rounded">
                   {userRoles.includes('Admin') && (
-                    <Link href="/admin" className="block px-4 py-2 hover:bg-[#61B785]">Cadastrar Produtos</Link>
+                    <div className="bg-[#5c3a2e] rounded">
+                      <p className="px-4 py-2 text-sm font-bold text-[#F1E4A6]">Administração</p>
+                      <Link href="/admin" className="block px-4 py-2 hover:bg-[#61B785]">Cadastrar Produtos</Link>
+                      <Link href="/listar" className="block px-4 py-2 hover:bg-[#61B785]">Listar Produtos</Link>
+                      <Link href="/editar" className="block px-4 py-2 hover:bg-[#61B785]">Editar Produtos</Link>
+                      <Link href="/excluir" className="block px-4 py-2 hover:bg-[#61B785]">Excluir Produto</Link>
+                    </div>
                   )}
                   <button onClick={openWishlistModal} className="block px-4 py-2 hover:bg-[#61B785]">
                     Minha Lista de Desejos
@@ -201,6 +207,7 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
+        {/* Menu mobile */}
         <div
           className={`fixed top-0 right-0 h-full w-64 bg-[#432721] text-[#F1E4A6] z-50 transform lg:hidden transition-transform duration-300 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -218,9 +225,21 @@ const Navbar: React.FC = () => {
                 <>
                   <span className="py-2 text-[#F1E4A6]">Bem-vindo, {userEmail}</span>
                   {userRoles.includes('Admin') && (
-                    <Link href="/admin" className="py-2 hover:text-[#61B785] transition-colors duration-300" onClick={toggleMenu}>
-                      Cadastrar Produtos
-                    </Link>
+                    <div className="bg-[#5c3a2e] rounded w-full">
+                      <p className="px-4 py-2 text-sm font-bold text-[#F1E4A6]">Administração</p>
+                      <Link href="/admin" className="block px-4 py-2 hover:bg-[#61B785]" onClick={toggleMenu}>
+                        Cadastrar Produtos
+                      </Link>
+                      <Link href="/listar" className="block px-4 py-2 hover:bg-[#61B785]" onClick={toggleMenu}>
+                        Listar Produtos
+                      </Link>
+                      <Link href="/editar" className="block px-4 py-2 hover:bg-[#61B785]" onClick={toggleMenu}>
+                        Editar Produtos
+                      </Link>
+                      <Link href="/excluir" className="block px-4 py-2 hover:bg-[#61B785]" onClick={toggleMenu}>
+                        Excluir Produto
+                      </Link>
+                    </div>
                   )}
                   <button onClick={openWishlistModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
                     Minha Lista de Desejos

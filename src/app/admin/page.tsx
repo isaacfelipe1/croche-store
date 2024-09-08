@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import withAuth from '../../hoc/withAuth'; // Importe o HOC de autenticação
+import withAuth from '../../hoc/withAuth'; // Importando o HOC de autenticação
 
 const CreateProductPage: React.FC = () => {
     const [name, setName] = useState('');
@@ -62,22 +62,23 @@ const CreateProductPage: React.FC = () => {
     };
 
     return (
-        <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-md shadow-md">
-            <h2 className="text-2xl font-bold mb-6">Criar Novo Produto</h2>
-            <form onSubmit={handleSubmit}>
+        <div className="max-w-2xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg dark:bg-[#1A1A1A]">
+            <h2 className="text-3xl font-semibold text-[#734230] mb-6 dark:text-[#F5F5F5]">Criar Novo Produto</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <input
                     type="text"
                     placeholder="Nome"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
+                    className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
                     required
                 />
                 <textarea
                     placeholder="Descrição"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
+                    className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] resize-none dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
+                    rows={4}
                     required
                 />
                 <input
@@ -85,7 +86,7 @@ const CreateProductPage: React.FC = () => {
                     placeholder="Preço"
                     value={price}
                     onChange={(e) => setPrice(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
+                    className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
                     required
                     min="0"
                 />
@@ -94,14 +95,14 @@ const CreateProductPage: React.FC = () => {
                     placeholder="Categoria"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
+                    className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
                 />
                 <input
                     type="text"
                     placeholder="Cor"
                     value={color}
                     onChange={(e) => setColor(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
+                    className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
                     required
                 />
                 <input
@@ -109,7 +110,7 @@ const CreateProductPage: React.FC = () => {
                     placeholder="Tamanho"
                     value={size}
                     onChange={(e) => setSize(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
+                    className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
                     required
                 />
                 <input
@@ -117,20 +118,20 @@ const CreateProductPage: React.FC = () => {
                     placeholder="URL da Imagem"
                     value={imageUrl}
                     onChange={(e) => setImageUrl(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
+                    className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
                 />
                 <input
                     type="number"
                     placeholder="Quantidade em Estoque"
                     value={stockQuantity}
                     onChange={(e) => setStockQuantity(e.target.value)}
-                    className="w-full p-2 mb-4 border rounded"
+                    className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
                     required
                     min="0"
                 />
                 <button
                     type="submit"
-                    className={`w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${isLoading ? 'cursor-not-allowed opacity-50' : ''}`}
+                    className={`w-full p-3 bg-[#61B785] text-white rounded-md hover:bg-[#734230] transition-colors duration-300 ${isLoading ? 'cursor-not-allowed opacity-50' : ''}`}
                     disabled={isLoading}
                 >
                     {isLoading ? 'Carregando...' : 'Criar Produto'}
