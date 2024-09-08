@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -7,6 +7,7 @@ import SobreModal from './sobreModal';
 import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
 import RegisterModal from './registerModal';
+import WishlistModal from './WishlistModal'; // Importando o novo modal para a lista de desejos
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +15,7 @@ const Navbar: React.FC = () => {
   const [isContatoModalOpen, setIsContatoModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false); // Estado para o modal de Wishlist
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const decodeToken = (token: string): string | null => {
@@ -40,7 +42,7 @@ const Navbar: React.FC = () => {
     setUserEmail(null);
     setIsOpen(false);
     console.log('Usuário deslogado, token e userId removidos.');
-    window.dispatchEvent(new Event('storage')); 
+    window.dispatchEvent(new Event('storage'));
   };
 
   const handleLoginSuccess = (token: string, userId: string) => {
@@ -108,12 +110,16 @@ const Navbar: React.FC = () => {
     setIsOpen(false);
   };
   const closeLoginModal = () => setIsLoginModalOpen(false);
-
   const openRegisterModal = () => {
     setIsRegisterModalOpen(true);
     setIsOpen(false);
   };
   const closeRegisterModal = () => setIsRegisterModalOpen(false);
+  const openWishlistModal = () => {
+    setIsWishlistModalOpen(true);
+    setIsOpen(false);
+  };
+  const closeWishlistModal = () => setIsWishlistModalOpen(false);
 
   return (
     <>
@@ -149,10 +155,7 @@ const Navbar: React.FC = () => {
                   stroke="#F1E4A6"
                 />
               ) : (
-                <path
-                  d="M4 6h16M4 12h16M4 18h16"
-                  stroke="#F1E4A6"
-                />
+                <path d="M4 6h16M4 12h16M4 18h16" stroke="#F1E4A6" />
               )}
             </svg>
           </button>
@@ -169,6 +172,9 @@ const Navbar: React.FC = () => {
               <div className="relative group">
                 <span className="py-2 px-3 text-[#F1E4A6] cursor-pointer">Bem-vindo, {userEmail}</span>
                 <div className="absolute top-full left-0 mt-1 hidden group-hover:block bg-white text-[#432721] shadow-lg rounded">
+                  <button onClick={openWishlistModal} className="block px-4 py-2 hover:bg-[#61B785]">
+                    Minha Lista de Desejos
+                  </button>
                   <Link href="/painel" className="block px-4 py-2 hover:bg-[#61B785]">Editar Perfil</Link>
                   <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-[#61B785]">Sair</button>
                 </div>
@@ -206,6 +212,9 @@ const Navbar: React.FC = () => {
               {userEmail ? (
                 <>
                   <span className="py-2 text-[#F1E4A6]">Bem-vindo, {userEmail}</span>
+                  <button onClick={openWishlistModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
+                    Minha Lista de Desejos
+                  </button>
                   <Link href="/painel" className="py-2 hover:text-[#61B785] transition-colors duration-300" onClick={toggleMenu}>
                     Editar Perfil
                   </Link>
@@ -226,23 +235,18 @@ const Navbar: React.FC = () => {
               <button onClick={openContatoModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
                 Contato
               </button>
-              <p className="py-2 text-sm text-[#F1E4A6]">Contato: (92) 99192-1009</p>
+              <p className="py-2 text-sm text-[#F1E4A6]">Nosso Contato: (92) 99192-1009</p>
             </div>
           )}
         </div>
       </nav>
 
-      {/* Modal Sobre */}
+      {/* Modais */}
       <SobreModal isOpen={isSobreModalOpen} onClose={closeSobreModal} />
-
-      {/* Modal Contato */}
       <ContatoModal isOpen={isContatoModalOpen} onClose={closeContatoModal} />
-
-      {/* Modal Login */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onLoginSuccess={handleLoginSuccess} />
-
-      {/* Modal Cadastro */}
       <RegisterModal isOpen={isRegisterModalOpen} onClose={closeRegisterModal} onRegisterSuccess={handleLoginSuccess} />
+      <WishlistModal isOpen={isWishlistModalOpen} onClose={closeWishlistModal} /> {/* Modal de Wishlist */}
     </>
   );
 };

@@ -1,10 +1,11 @@
-"use client";
+'use client';
+
 import React, { useEffect, useState, memo } from 'react';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaHeart, FaRegHeart, FaSearch } from 'react-icons/fa'; // Importando ícone de pesquisa
 import { getProducts, Product } from '../app/api';
 import CategoryFilter from '../app/components/categoryFilter';
-import ImageModal from '../app/components/imageModal'; 
-import Alert from '../app/components/alert'; 
+import ImageModal from '../app/components/imageModal';
+import Alert from '../app/components/alert';
 
 const ProductsList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,7 +19,8 @@ const ProductsList: React.FC = () => {
   const [currentImage, setCurrentImage] = useState<{ url: string; alt: string } | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null); 
-  const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null); // Estado para o feedback da compra
+  const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null);
+  const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -36,6 +38,9 @@ const ProductsList: React.FC = () => {
     fetchProducts();
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token);
+
+    const savedFavorites = JSON.parse(localStorage.getItem('favoriteProducts') || '[]');
+    setFavoriteProducts(savedFavorites);
 
     const handleStorageChange = () => {
       const updatedToken = localStorage.getItem('token');
@@ -63,6 +68,20 @@ const ProductsList: React.FC = () => {
     setFilteredProducts(filtered);
   }, [selectedCategory, searchTerm, products]);
 
+  const toggleFavorite = (productId: number) => {
+    if (!isLoggedIn) {
+      setAlertMessage('Você precisa estar logado para favoritar um produto.');
+      return;
+    }
+
+    const updatedFavorites = favoriteProducts.includes(productId)
+      ? favoriteProducts.filter((id) => id !== productId)
+      : [...favoriteProducts, productId];
+
+    setFavoriteProducts(updatedFavorites);
+    localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites));
+  };
+
   const handleWhatsappPurchase = (product: Product) => {
     const token = localStorage.getItem('token'); 
 
@@ -76,9 +95,8 @@ const ProductsList: React.FC = () => {
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappURL, '_blank');
 
-    // Exibe feedback de sucesso
     setPurchaseFeedback('Redirecionando para o WhatsApp...');
-    setTimeout(() => setPurchaseFeedback(null), 3000); // Remove o feedback após 3 segundos
+    setTimeout(() => setPurchaseFeedback(null), 3000);
   };
 
   const handleShowMore = () => {
@@ -104,27 +122,26 @@ const ProductsList: React.FC = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-center mb-8 text-[#432721]">Tapetes Crochê</h1>
 
-      {/* Exibe o Alerta, se houver uma mensagem */}
       {alertMessage && <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />}
 
-      {/* Exibe Feedback da Compra, se houver */}
       {purchaseFeedback && (
         <p className="text-center text-green-500 mb-4">{purchaseFeedback}</p>
       )}
 
-      {/* Campo de Pesquisa Centralizado */}
       <div className="flex justify-center mb-6">
-        <input
-          type="text"
-          placeholder="Pesquisar por nome do produto..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full md:w-1/2 px-4 py-2 border rounded focus:outline-none focus:border-[#61B785]"
-        />
+        <div className="relative w-full md:w-1/2">
+          <input
+            type="text"
+            placeholder="Pesquise por nome do produto..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border rounded pl-10 focus:outline-none focus:border-[#61B785]"
+          />
+          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+        </div>
       </div>
 
       <div className="flex flex-col md:flex-row">
-        {/* Componente de Filtro de Categorias */}
         <div className="w-full md:w-1/4 mb-6 md:mb-0 md:mr-8">
           <CategoryFilter 
             categories={categories} 
@@ -133,17 +150,24 @@ const ProductsList: React.FC = () => {
           />
         </div>
 
-        {/* Lista de Produtos */}
         <div className="w-full md:w-3/4">
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredProducts.slice(0, visibleCount).map((product) => (
               <li key={product.id} className="bg-[#FDFDFD] border border-[#432721] rounded-lg shadow hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden mx-2 sm:mx-0">
-                <div className="overflow-hidden rounded-t-lg cursor-pointer" onClick={() => openImageModal(product.imageUrl, product.name)}>
+                <div className="overflow-hidden rounded-t-lg cursor-pointer relative">
                   <img 
                     src={product.imageUrl} 
                     alt={product.name} 
                     className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
+                    onClick={() => openImageModal(product.imageUrl, product.name)}
                   />
+                  {/* Ícone de Coração para Favoritar */}
+                  <button 
+                    className="absolute top-2 right-2 text-[#E56446] hover:text-[#432721] transition-colors duration-200"
+                    onClick={() => toggleFavorite(product.id)}
+                  >
+                    {favoriteProducts.includes(product.id) ? <FaHeart size={24} /> : <FaRegHeart size={24} />}
+                  </button>
                 </div>
                 <div className="p-4">
                   <h2 className="text-xl font-semibold text-[#432721] mb-2">{product.name}</h2>
@@ -154,7 +178,6 @@ const ProductsList: React.FC = () => {
                   ) : product.stockQuantity >= 2 ? (
                     <p className="text-[#61B785] font-bold mb-2">Em estoque</p>
                   ) : null}
-                  {/* Botão do WhatsApp, verifica o login para redirecionamento */}
                   <button 
                     onClick={() => handleWhatsappPurchase(product)} 
                     className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
@@ -165,7 +188,6 @@ const ProductsList: React.FC = () => {
               </li>
             ))}
           </ul>
-          {/* Botão Ver Mais */}
           {filteredProducts.length > visibleCount && (
             <div className="flex justify-center mt-6">
               <button 
@@ -179,7 +201,6 @@ const ProductsList: React.FC = () => {
         </div>
       </div>
 
-      {/* Modal de Imagem */}
       {currentImage && (
         <ImageModal
           isOpen={isImageModalOpen}
