@@ -196,6 +196,8 @@ const ProductsList: React.FC = () => {
                   <h2 className="text-xl font-semibold text-[#432721] mb-2">
                     {product.name}
                   </h2>
+                  <p className="text-[#432721] mb-1">{product.description}</p>{' '}
+                  {/* Adicionando a descrição aqui */}
                   <p className="text-[#432721] mb-1">
                     Preço:{' '}
                     <span className="text-[#E56446] font-bold">
