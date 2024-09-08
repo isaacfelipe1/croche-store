@@ -8,7 +8,7 @@ import { FiLock } from 'react-icons/fi';
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (token: string, userId: string) => void; 
+  onLoginSuccess: (token: string, userId: string, roles: string[]) => void; // Adicione 'roles' aqui
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
@@ -20,6 +20,32 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
   const [isEmailValid, setIsEmailValid] = useState(true); 
   const [theme, setTheme] = useState('light'); 
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); 
+
+  const decodeToken = (token: string): { email: string; roles: string[] } | null => {
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+
+      const parsedToken = JSON.parse(jsonPayload);
+      const email = parsedToken.sub;
+
+      // Verifica o campo de papel específico
+      const roles = Array.isArray(parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
+        ? parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+        : [parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]];
+      
+      return { email, roles };
+    } catch (error) {
+      console.error('Erro ao decodificar o token:', error);
+      return null;
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +72,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
       localStorage.setItem('userId', userId.toString()); 
       window.dispatchEvent(new Event('storage')); 
 
-      onLoginSuccess(token, userId); 
+      const decoded = decodeToken(token);
+      if (decoded) {
+        onLoginSuccess(token, userId, decoded.roles); // Passe o token, userId e roles
+      } else {
+        throw new Error('Falha ao decodificar o token.');
+      }
     } catch (err) {
       console.error('Erro ao fazer login:', err);
       setError('Credenciais inválidas. Por favor, tente novamente.');
@@ -84,7 +115,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
 
   const handleRegisterSuccess = (token: string, userId: string) => {
     // Autentica o usuário imediatamente após o registro
-    onLoginSuccess(token, userId);
+    onLoginSuccess(token, userId, []); // Inicialmente sem roles, até o login decodificar
     handleCloseRegisterModal(); 
   };
 

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -7,7 +7,7 @@ import SobreModal from './sobreModal';
 import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
 import RegisterModal from './registerModal';
-import WishlistModal from './WishlistModal'; // Importando o novo modal para a lista de desejos
+import WishlistModal from './WishlistModal';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,10 +15,11 @@ const Navbar: React.FC = () => {
   const [isContatoModalOpen, setIsContatoModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false); // Estado para o modal de Wishlist
+  const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userRoles, setUserRoles] = useState<string[]>([]);
 
-  const decodeToken = (token: string): string | null => {
+  const decodeToken = (token: string): { email: string; roles: string[] } | null => {
     try {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -28,8 +29,10 @@ const Navbar: React.FC = () => {
           .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
           .join('')
       );
-      const { sub } = JSON.parse(jsonPayload);
-      return sub;
+      const { sub: email, role } = JSON.parse(jsonPayload);
+
+      const roles = Array.isArray(role) ? role : [role];
+      return { email, roles };
     } catch (error) {
       console.error('Erro ao decodificar o token:', error);
       return null;
@@ -40,18 +43,17 @@ const Navbar: React.FC = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     setUserEmail(null);
+    setUserRoles([]);
     setIsOpen(false);
     console.log('Usuário deslogado, token e userId removidos.');
     window.dispatchEvent(new Event('storage'));
   };
 
-  const handleLoginSuccess = (token: string, userId: string) => {
+  const handleLoginSuccess = (token: string, userId: string, roles: string[]) => {
     localStorage.setItem('token', token);
     localStorage.setItem('userId', userId);
-    const email = decodeToken(token);
-    if (email) {
-      setUserEmail(email);
-    }
+    setUserEmail(decodeToken(token)?.email ?? null);
+    setUserRoles(roles);
     setIsLoginModalOpen(false);
     setIsRegisterModalOpen(false);
   };
@@ -59,26 +61,30 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      const email = decodeToken(token);
-      if (email) {
-        setUserEmail(email);
+      const decoded = decodeToken(token);
+      if (decoded) {
+        setUserEmail(decoded.email);
+        setUserRoles(decoded.roles);
       }
     }
 
     const handleStorageChange = () => {
       const token = localStorage.getItem('token');
       if (token) {
-        const email = decodeToken(token);
-        if (email) {
-          setUserEmail(email);
+        const decoded = decodeToken(token);
+        if (decoded) {
+          setUserEmail(decoded.email);
+          setUserRoles(decoded.roles);
         }
       } else {
         setUserEmail(null);
+        setUserRoles([]);
       }
     };
 
     const handleAccountDeleted = () => {
       setUserEmail(null);
+      setUserRoles([]);
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -129,7 +135,6 @@ const Navbar: React.FC = () => {
             <Link href="/">Crochê Store</Link>
           </div>
 
-          {/* Número de telefone (Visível no Desktop) */}
           <div className="hidden lg:flex lg:items-center">
             <p className="text-[#F1E4A6] text-sm mr-6 flex items-center">
               <FaWhatsapp className="mr-2 text-xl text-[#E56446]" />
@@ -137,7 +142,6 @@ const Navbar: React.FC = () => {
             </p>
           </div>
 
-          {/* Botão do menu para dispositivos móveis */}
           <button
             onClick={toggleMenu}
             className="block lg:hidden text-[#F1E4A6] focus:outline-none"
@@ -160,7 +164,6 @@ const Navbar: React.FC = () => {
             </svg>
           </button>
 
-          {/* Links de navegação (Menu para Desktop) */}
           <div className="hidden lg:flex lg:items-center lg:space-x-6">
             <Link href="/" className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
               Início
@@ -172,6 +175,9 @@ const Navbar: React.FC = () => {
               <div className="relative group">
                 <span className="py-2 px-3 text-[#F1E4A6] cursor-pointer">Bem-vindo, {userEmail}</span>
                 <div className="absolute top-full left-0 mt-1 hidden group-hover:block bg-white text-[#432721] shadow-lg rounded">
+                  {userRoles.includes('Admin') && (
+                    <Link href="/admin" className="block px-4 py-2 hover:bg-[#61B785]">Cadastrar Produtos</Link>
+                  )}
                   <button onClick={openWishlistModal} className="block px-4 py-2 hover:bg-[#61B785]">
                     Minha Lista de Desejos
                   </button>
@@ -195,7 +201,6 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Menu para dispositivos móveis */}
         <div
           className={`fixed top-0 right-0 h-full w-64 bg-[#432721] text-[#F1E4A6] z-50 transform lg:hidden transition-transform duration-300 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -212,6 +217,11 @@ const Navbar: React.FC = () => {
               {userEmail ? (
                 <>
                   <span className="py-2 text-[#F1E4A6]">Bem-vindo, {userEmail}</span>
+                  {userRoles.includes('Admin') && (
+                    <Link href="/admin" className="py-2 hover:text-[#61B785] transition-colors duration-300" onClick={toggleMenu}>
+                      Cadastrar Produtos
+                    </Link>
+                  )}
                   <button onClick={openWishlistModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
                     Minha Lista de Desejos
                   </button>
@@ -245,8 +255,8 @@ const Navbar: React.FC = () => {
       <SobreModal isOpen={isSobreModalOpen} onClose={closeSobreModal} />
       <ContatoModal isOpen={isContatoModalOpen} onClose={closeContatoModal} />
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onLoginSuccess={handleLoginSuccess} />
-      <RegisterModal isOpen={isRegisterModalOpen} onClose={closeRegisterModal} onRegisterSuccess={handleLoginSuccess} />
-      <WishlistModal isOpen={isWishlistModalOpen} onClose={closeWishlistModal} /> {/* Modal de Wishlist */}
+      <RegisterModal isOpen={isRegisterModalOpen} onClose={closeRegisterModal} onRegisterSuccess={(token, userId) => handleLoginSuccess(token, userId, [])} />
+      <WishlistModal isOpen={isWishlistModalOpen} onClose={closeWishlistModal} />
     </>
   );
 };
