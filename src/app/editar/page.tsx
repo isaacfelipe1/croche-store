@@ -1,30 +1,33 @@
-// src/app/editar/page.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import withAuth from '../../hoc/withAuth'; // Importando o HOC de autenticação
+import withAuth from '../../hoc/withAuth'; 
+import debounce from 'lodash/debounce'; // Importa o debounce do lodash
 
 const EditProductPage: React.FC = () => {
-  const [productId, setProductId] = useState('');
+  const [productId, setProductId] = useState(''); 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
   const [size, setSize] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [stockQuantity, setStockQuantity] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  // Busca os dados do produto pelo ID quando o campo de ID é atualizado
-  useEffect(() => {
-    if (productId) {
-      axios
-        .get(`http://localhost:5207/api/Products/${productId}`)
-        .then((response) => {
+  const fetchProductData = useCallback(
+    debounce(async (id: string) => {
+      if (id.trim()) {
+        try {
+          const response = await axios.get(`http://localhost:5207/api/Products/${id.trim()}`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
           const product = response.data;
           setName(product.name);
           setDescription(product.description);
@@ -32,20 +35,25 @@ const EditProductPage: React.FC = () => {
           setCategory(product.category);
           setColor(product.color);
           setSize(product.size);
-          setImageUrl(product.imageUrl);
+          setImageFile(null); // Reset the image file since the original URL is not available
           setStockQuantity(product.stockQuantity.toString());
-        })
-        .catch((error) =>
-          console.error('Erro ao buscar dados do produto:', error)
-        );
-    }
-  }, [productId]);
+        } catch (error) {
+          console.error('Erro ao buscar dados do produto:', error);
+          alert('Produto não encontrado. Verifique o ID inserido.');
+        }
+      }
+    }, 500), 
+    []
+  );
 
-  // Função para lidar com o envio do formulário de edição
+  useEffect(() => {
+    fetchProductData(productId);
+  }, [productId, fetchProductData]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!productId) {
+    if (!productId.trim()) {
       alert('ID do produto é obrigatório.');
       return;
     }
@@ -63,29 +71,36 @@ const EditProductPage: React.FC = () => {
     setIsLoading(true);
 
     try {
+      // Cria um objeto FormData para enviar os dados como formulário
+      const formData = new FormData();
+      formData.append('id', productId.trim());
+      formData.append('name', name);
+      formData.append('description', description);
+      formData.append('price', parseFloat(price).toString());
+      formData.append('category', category);
+      formData.append('color', color);
+      formData.append('size', size);
+      formData.append('stockQuantity', stockQuantity);
+
+      // Adiciona o arquivo de imagem ao FormData se estiver presente
+      if (imageFile) {
+        formData.append('imageFile', imageFile);
+      }
+
       const response = await axios.put(
-        `http://localhost:5207/api/Products/${productId}`,
-        {
-          id: productId,
-          name,
-          description,
-          price: parseFloat(price),
-          category,
-          color,
-          size,
-          imageUrl,
-          stockQuantity: parseInt(stockQuantity, 10),
-        },
+        `http://localhost:5207/api/Products/${productId.trim()}`, 
+        formData,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data', // Define o tipo de conteúdo correto
           },
         }
       );
 
       if (response.status === 204) {
         alert('Produto atualizado com sucesso!');
-        router.push('/listar'); // Redireciona para a lista de produtos
+        router.push('/listar'); 
       }
     } catch (error: any) {
       console.error('Erro ao atualizar o produto:', error.response?.data || error.message);
@@ -156,10 +171,8 @@ const EditProductPage: React.FC = () => {
           required
         />
         <input
-          type="text"
-          placeholder="URL da Imagem"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
+          type="file"
+          onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
         />
         <input
@@ -183,4 +196,4 @@ const EditProductPage: React.FC = () => {
   );
 };
 
-export default withAuth(EditProductPage); // Envolva o componente com withAuth para proteger a rota
+export default withAuth(EditProductPage);
