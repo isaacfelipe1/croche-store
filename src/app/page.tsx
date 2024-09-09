@@ -134,10 +134,6 @@ const ProductsList: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-[#432721]">
-        Tapetes Crochê
-      </h1>
-
       {alertMessage && (
         <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />
       )}
