@@ -10,7 +10,7 @@ interface ImageModalProps {
 
 const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl, altText }) => {
   // Adiciona o domínio completo ao URL da imagem
-  const fullImageUrl = `http://localhost:5207${imageUrl}`;
+  const fullImageUrl = `https://crochetstoreapi.onrender.com${imageUrl}`;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

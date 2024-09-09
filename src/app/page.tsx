@@ -29,10 +29,9 @@ const ProductsList: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const data = await getProducts()
-        // Ajuste o valor do preço para o formato correto
         const formattedData = data.map((product) => ({
           ...product,
-          price: parseFloat(product.price.toString()), // Convertendo o preço para número
+          price: parseFloat(product.price.toString()), 
         }))
         setProducts(formattedData)
         setFilteredProducts(formattedData)
@@ -178,7 +177,7 @@ const ProductsList: React.FC = () => {
               >
                 <div className="overflow-hidden rounded-t-lg cursor-pointer relative">
                   <img
-                    src={`http://localhost:5207${product.imageUrl}`}
+                    src={`https://crochetstoreapi.onrender.com${product.imageUrl}`}
                     alt={product.name}
                     className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
                     onClick={() =>

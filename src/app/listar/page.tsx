@@ -23,7 +23,7 @@ const ProductsListPage: React.FC = () => {
 
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5207/api/Products');
+        const response = await axios.get('https://crochetstoreapi.onrender.com/api/Products');
         setProducts(response.data);
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);

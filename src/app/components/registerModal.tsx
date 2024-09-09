@@ -38,7 +38,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
     }
 
     try {
-      const response = await fetch('http://localhost:5207/Auth/register', {
+      const response = await fetch('https://crochetstoreapi.onrender.com/Auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

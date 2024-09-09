@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5207/api'; 
+const API_BASE_URL = 'https://crochetstoreapi.onrender.com/api'; 
 
 export interface Product {
   id: number;

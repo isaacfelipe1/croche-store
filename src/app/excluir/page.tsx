@@ -20,7 +20,7 @@ const DeleteProductPage: React.FC = () => {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
       setIsLoading(true);
       try {
-        const response = await axios.delete(`http://localhost:5207/api/Products/${productId}`, {
+        const response = await axios.delete(`https://crochetstoreapi.onrender.com/api/Products/${productId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },

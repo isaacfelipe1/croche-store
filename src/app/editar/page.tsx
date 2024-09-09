@@ -23,7 +23,7 @@ const EditProductPage: React.FC = () => {
     debounce(async (id: string) => {
       if (id.trim()) {
         try {
-          const response = await axios.get(`http://localhost:5207/api/Products/${id.trim()}`, {
+          const response = await axios.get(`https://crochetstoreapi.onrender.com/api/Products/${id.trim()}`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
@@ -88,7 +88,7 @@ const EditProductPage: React.FC = () => {
       }
 
       const response = await axios.put(
-        `http://localhost:5207/api/Products/${productId.trim()}`, 
+        `https://crochetstoreapi.onrender.com/api/Products/${productId.trim()}`, 
         formData,
         {
           headers: {

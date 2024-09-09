@@ -76,7 +76,7 @@ const EditProfile: React.FC = () => {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    const success = await handleAction(`http://localhost:5207/Auth/edit/${userId}`, 'PUT', {
+    const success = await handleAction(`https://crochetstoreapi.onrender.com/Auth/edit/${userId}`, 'PUT', {
       email,
       nome,
       currentPassword,
@@ -95,7 +95,7 @@ const EditProfile: React.FC = () => {
   const confirmDeleteAccount = () => {
     setIsConfirmModalOpen(false)
     setIsLoading(true)
-    handleAction(`http://localhost:5207/Auth/delete/${userId}`, 'DELETE')
+    handleAction(`https://crochetstoreapi.onrender.com/Auth/delete/${userId}`, 'DELETE')
   }
 
   const handleCloseModal = () => {

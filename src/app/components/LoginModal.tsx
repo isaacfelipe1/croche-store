@@ -53,7 +53,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5207/Auth/login', {
+      const response = await fetch('https://crochetstoreapi.onrender.com/Auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

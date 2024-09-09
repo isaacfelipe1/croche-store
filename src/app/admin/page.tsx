@@ -49,7 +49,7 @@ const CreateProductPage: React.FC = () => {
       }
 
       const response = await axios.post(
-        'http://localhost:5207/api/Products',
+        'https://crochetstoreapi.onrender.com/api/Products',
         formData,
         {
           headers: {
