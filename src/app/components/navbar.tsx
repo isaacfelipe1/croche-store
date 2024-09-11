@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaWhatsapp } from 'react-icons/fa';
+import { FaWhatsapp, FaHome } from 'react-icons/fa'; // Importa o ícone de Home
 import SobreModal from './sobreModal';
 import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
@@ -215,8 +215,9 @@ const Navbar: React.FC = () => {
         >
           {isOpen && (
             <div className="flex flex-col items-start p-4 space-y-4">
-              <Link href="/" className="py-2 hover:text-[#61B785] transition-colors duration-300" onClick={toggleMenu}>
-                Início
+              {/* Ícone de Home maior para versão mobile */}
+              <Link href="/" className="flex justify-center items-center mb-4" onClick={toggleMenu}>
+                <FaHome className="text-4xl text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" />
               </Link>
               <button onClick={openSobreModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
                 Sobre
