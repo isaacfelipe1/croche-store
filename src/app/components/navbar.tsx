@@ -173,7 +173,7 @@ const Navbar: React.FC = () => {
             </button>
             {userEmail ? (
               <div className="relative group">
-                <span className="py-2 px-3 text-[#F1E4A6] cursor-pointer">Bem-vindo, {userEmail}</span>
+                <span className="py-2 px-3 text-[#F1E4A6] cursor-pointer">Olá, {userEmail}</span>
                 <div className="absolute top-full left-0 mt-1 hidden group-hover:block bg-white text-[#432721] shadow-lg rounded">
                   {userRoles.includes('Admin') && (
                     <div className="bg-[#5c3a2e] rounded">
@@ -224,7 +224,7 @@ const Navbar: React.FC = () => {
               </button>
               {userEmail ? (
                 <>
-                  <span className="mb-4 text-lg text-[#F1E4A6]">Bem-vindo, {userEmail}</span>
+                  <span className="mb-4 text-lg text-[#F1E4A6]">Olá, {userEmail}</span>
                   {userRoles.includes('Admin') && (
                     <div className="bg-[#5c3a2e] rounded w-full px-4 py-2 mb-4">
                       <p className="text-sm font-bold text-[#F1E4A6] mb-2">Administração</p>
