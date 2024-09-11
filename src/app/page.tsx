@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, memo } from 'react'
-import { FaWhatsapp, FaHeart, FaRegHeart, FaSearch } from 'react-icons/fa' // Importando ícone de pesquisa
+import { FaWhatsapp, FaHeart, FaRegHeart, FaSearch } from 'react-icons/fa' 
 import { getProducts, Product } from '../app/api'
 import CategoryFilter from '../app/components/categoryFilter'
 import ImageModal from '../app/components/imageModal'

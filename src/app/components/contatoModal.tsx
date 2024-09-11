@@ -1,4 +1,3 @@
-// src/components/ContatoModal.tsx
 import React from 'react';
 import Modal from './modal';
 
