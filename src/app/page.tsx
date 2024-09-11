@@ -142,18 +142,19 @@ const ProductsList: React.FC = () => {
         <p className="text-center text-green-500 mb-4">{purchaseFeedback}</p>
       )}
 
-      <div className="flex justify-center mb-6">
-        <div className="relative w-full md:w-1/2">
-          <input
-            type="text"
-            placeholder="Pesquise por nome do produto..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border rounded pl-10 focus:outline-none focus:border-[#61B785]"
-          />
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-        </div>
-      </div>
+<div className="flex justify-center mt-14 mb-6">
+  <div className="relative w-full md:w-1/2">
+    <input
+      type="text"
+      placeholder="Pesquise por nome do produto..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full px-4 py-2 border rounded pl-10 focus:outline-none focus:border-[#61B785]"
+    />
+    <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+  </div>
+</div>
+
 
       <div className="flex flex-col md:flex-row">
         <div className="w-full md:w-1/4 mb-6 md:mb-0 md:mr-8">
