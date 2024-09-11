@@ -16,8 +16,8 @@ const ContatoModal: React.FC<ContatoModalProps> = ({ isOpen, onClose }) => {
       </p>
       <ul className="text-gray-700 mb-4">
         <li><strong>Email:</strong> contato@crochestore.com</li>
-        <li><strong>Telefone:</strong> (81) 99999-9999</li>
-        <li><strong>Endereço:</strong> Rua do Crochê, 123, Bairro Artesanal, Cidade</li>
+        <li><strong>Telefone:</strong> (92) 99192-1009</li>
+        <li><strong>Endereço:</strong> Rua Serudo Martins, 123, Centro, Itacoatiara</li>
       </ul>
       <p className="text-gray-700">
         Ou envie-nos uma mensagem diretamente no nosso WhatsApp.
