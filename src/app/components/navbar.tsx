@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaWhatsapp, FaHome } from 'react-icons/fa'; // Importa o ícone de Home
+import { FaWhatsapp, FaHome } from 'react-icons/fa'; 
 import SobreModal from './sobreModal';
 import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
@@ -214,58 +214,58 @@ const Navbar: React.FC = () => {
           }`}
         >
           {isOpen && (
-            <div className="flex flex-col items-start p-4 space-y-4">
+            <div className="flex flex-col items-center p-4">
               {/* Ícone de Home maior para versão mobile */}
-              <Link href="/" className="flex justify-center items-center mb-4" onClick={toggleMenu}>
+              <Link href="/" onClick={toggleMenu} className="mb-6">
                 <FaHome className="text-4xl text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" />
               </Link>
-              <button onClick={openSobreModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
+              <button onClick={openSobreModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
                 Sobre
               </button>
               {userEmail ? (
                 <>
-                  <span className="py-2 text-[#F1E4A6]">Bem-vindo, {userEmail}</span>
+                  <span className="mb-4 text-lg text-[#F1E4A6]">Bem-vindo, {userEmail}</span>
                   {userRoles.includes('Admin') && (
-                    <div className="bg-[#5c3a2e] rounded w-full">
-                      <p className="px-4 py-2 text-sm font-bold text-[#F1E4A6]">Administração</p>
-                      <Link href="/admin" className="block px-4 py-2 hover:bg-[#61B785]" onClick={toggleMenu}>
+                    <div className="bg-[#5c3a2e] rounded w-full px-4 py-2 mb-4">
+                      <p className="text-sm font-bold text-[#F1E4A6] mb-2">Administração</p>
+                      <Link href="/admin" className="block py-1 hover:bg-[#61B785]" onClick={toggleMenu}>
                         Cadastrar Produtos
                       </Link>
-                      <Link href="/listar" className="block px-4 py-2 hover:bg-[#61B785]" onClick={toggleMenu}>
+                      <Link href="/listar" className="block py-1 hover:bg-[#61B785]" onClick={toggleMenu}>
                         Listar Produtos
                       </Link>
-                      <Link href="/editar" className="block px-4 py-2 hover:bg-[#61B785]" onClick={toggleMenu}>
+                      <Link href="/editar" className="block py-1 hover:bg-[#61B785]" onClick={toggleMenu}>
                         Editar Produtos
                       </Link>
-                      <Link href="/excluir" className="block px-4 py-2 hover:bg-[#61B785]" onClick={toggleMenu}>
+                      <Link href="/excluir" className="block py-1 hover:bg-[#61B785]" onClick={toggleMenu}>
                         Excluir Produto
                       </Link>
                     </div>
                   )}
-                  <button onClick={openWishlistModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
+                  <button onClick={openWishlistModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
                     Minha Lista de Desejos
                   </button>
-                  <Link href="/painel" className="py-2 hover:text-[#61B785] transition-colors duration-300" onClick={toggleMenu}>
+                  <Link href="/painel" className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300" onClick={toggleMenu}>
                     Editar Perfil
                   </Link>
-                  <button onClick={handleLogout} className="py-2 hover:text-[#61B785] transition-colors duration-300">
+                  <button onClick={handleLogout} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
                     Sair
                   </button>
                 </>
               ) : (
                 <>
-                  <button onClick={openLoginModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
+                  <button onClick={openLoginModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
                     Login
                   </button>
-                  <button onClick={openRegisterModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
+                  <button onClick={openRegisterModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
                     Cadastrar
                   </button>
                 </>
               )}
-              <button onClick={openContatoModal} className="py-2 hover:text-[#61B785] transition-colors duration-300">
+              <button onClick={openContatoModal} className="text-lg hover:text-[#61B785] transition-colors duration-300">
                 Contato
               </button>
-              <p className="py-2 text-sm text-[#F1E4A6]">Nosso Contato: (92) 99192-1009</p>
+              <p className="mt-4 text-sm text-[#F1E4A6]">Nosso Contato: (92) 99192-1009</p>
             </div>
           )}
         </div>
