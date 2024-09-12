@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import withAuth from '../../hoc/withAuth'; 
 import debounce from 'lodash/debounce'; // Importa o debounce do lodash
+import { parseCookies } from 'nookies'; // Importa nookies para gerenciar cookies
 
 const EditProductPage: React.FC = () => {
   const [productId, setProductId] = useState(''); 
@@ -23,9 +24,17 @@ const EditProductPage: React.FC = () => {
     debounce(async (id: string) => {
       if (id.trim()) {
         try {
+          const cookies = parseCookies(); // Obtendo os cookies
+          const token = cookies.token; // Obtendo o token dos cookies
+
+          if (!token) {
+            alert('Você precisa estar logado para buscar dados do produto.');
+            return;
+          }
+
           const response = await axios.get(`https://crochetstoreapi.onrender.com/api/Products/${id.trim()}`, {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
+              Authorization: `Bearer ${token}`, // Usando o token dos cookies
             },
           });
           const product = response.data;
@@ -71,6 +80,14 @@ const EditProductPage: React.FC = () => {
     setIsLoading(true);
 
     try {
+      const cookies = parseCookies(); // Obtendo os cookies
+      const token = cookies.token; // Obtendo o token dos cookies
+
+      if (!token) {
+        alert('Você precisa estar logado para atualizar o produto.');
+        return;
+      }
+
       // Cria um objeto FormData para enviar os dados como formulário
       const formData = new FormData();
       formData.append('id', productId.trim());
@@ -92,7 +109,7 @@ const EditProductPage: React.FC = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token}`, // Usando o token dos cookies
             'Content-Type': 'multipart/form-data', // Define o tipo de conteúdo correto
           },
         }
