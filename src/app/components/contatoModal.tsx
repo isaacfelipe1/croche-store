@@ -14,7 +14,9 @@ const ContatoModal: React.FC<ContatoModalProps> = ({ isOpen, onClose }) => {
         Estamos aqui para ajudar! Se você tiver alguma dúvida ou precisar de mais informações, entre em contato conosco através dos seguintes meios:
       </p>
       <ul className="text-gray-700 mb-4">
-        <li><strong>Email:</strong> contato@crochestore.com</li>
+        <li>
+          <strong>Email:</strong> <a href="mailto:amorcroche5252@gmail.com" className="text-blue-500 underline">amorcroche5252@gmail.com</a>
+        </li>
         <li><strong>Telefone:</strong> (92) 99192-1009</li>
         <li><strong>Endereço:</strong> Rua Serudo Martins, 123, Centro, Itacoatiara</li>
       </ul>
