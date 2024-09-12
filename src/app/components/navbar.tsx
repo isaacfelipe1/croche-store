@@ -152,7 +152,7 @@ const Navbar: React.FC = () => {
           <div className="hidden lg:flex lg:items-center">
             <p className="text-[#F1E4A6] text-sm mr-6 flex items-center">
               <FaWhatsapp className="mr-2 text-xl text-[#E56446]" />
-              Nosso contato: (91) 99192-1009
+              Nosso contato: (92) 99192-8559
             </p>
           </div>
 
