@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from '../app/components/footer';
 import Navbar from '../app/components/navbar'; 
-
+import CrochetStoreImage from '../assets/logo.jpg';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     description: "Aqui você vai comprar e vender seu crochê",
     images: [
       {
-        url: "https://croche-store.vercel.app/", // Substitua pelo URL da imagem desejada
+        url: "https://croche-store1.s3.us-east-2.amazonaws.com/logoLoja.jpg", // Substitua pelo URL da imagem desejada
         width: 1200, // Largura da imagem
         height: 630,  // Altura da imagem
         alt: "Imagem representando a loja de crochê", // Texto alternativo para a imagem
