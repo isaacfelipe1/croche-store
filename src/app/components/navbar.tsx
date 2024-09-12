@@ -179,10 +179,10 @@ const Navbar: React.FC = () => {
           </button>
 
           <div className="hidden lg:flex lg:items-center lg:space-x-6">
-            <Link href="/" className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
+            <Link href="/" className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300 font-bold">
               Início
             </Link>
-            <button onClick={openSobreModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
+            <button onClick={openSobreModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300 font-bold">
               Sobre
             </button>
             {userEmail ? (
@@ -192,32 +192,32 @@ const Navbar: React.FC = () => {
                   {userRoles.includes('Admin') && (
                     <div className="bg-[#5c3a2e] rounded">
                       <p className="px-4 py-2 text-sm font-bold text-[#F1E4A6]">Administração</p>
-                      <Link href="/admin" className="block px-4 py-2 hover:bg-[#61B785]">Cadastrar Produtos</Link>
-                      <Link href="/listar" className="block px-4 py-2 hover:bg-[#61B785]">Listar Produtos</Link>
-                      <Link href="/editar" className="block px-4 py-2 hover:bg-[#61B785]">Editar Produtos</Link>
-                      <Link href="/excluir" className="block px-4 py-2 hover:bg-[#61B785]">Excluir Produto</Link>
+                      <Link href="/admin" className="block px-4 py-2 hover:bg-[#61B785] font-bold">Cadastrar Produtos</Link>
+                      <Link href="/listar" className="block px-4 py-2 hover:bg-[#61B785] font-bold">Listar Produtos</Link>
+                      <Link href="/editar" className="block px-4 py-2 hover:bg-[#61B785] font-bold">Editar Produtos</Link>
+                      <Link href="/excluir" className="block px-4 py-2 hover:bg-[#61B785] font-bold">Excluir Produto</Link>
                     </div>
                   )}
-                  {!userRoles.includes('Admin') && ( // Oculta a lista de desejos para administradores
-                    <button onClick={openWishlistModal} className="block px-4 py-2 hover:bg-[#61B785]">
+                  {!userRoles.includes('Admin') && (
+                    <button onClick={openWishlistModal} className="block px-4 py-2 hover:bg-[#61B785] font-bold">
                       Minha Lista de Desejos
                     </button>
                   )}
-                  <Link href="/painel" className="block px-4 py-2 hover:bg-[#61B785]">Editar Perfil</Link>
-                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-[#61B785]">Sair</button>
+                  <Link href="/painel" className="block px-4 py-2 hover:bg-[#61B785] font-bold">Editar Perfil</Link>
+                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-[#61B785] font-bold">Sair</button>
                 </div>
               </div>
             ) : (
               <>
-                <button onClick={openLoginModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
+                <button onClick={openLoginModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300 font-bold">
                   Login
                 </button>
-                <button onClick={openRegisterModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
+                <button onClick={openRegisterModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300 font-bold">
                   Cadastrar
                 </button>
               </>
             )}
-            <button onClick={openContatoModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300">
+            <button onClick={openContatoModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300 font-bold">
               Contato
             </button>
           </div>
@@ -231,10 +231,10 @@ const Navbar: React.FC = () => {
         >
           {isOpen && (
             <div className="flex flex-col items-center p-4">
-              <Link href="/" onClick={toggleMenu} className="mb-6">
+              <Link href="/" onClick={toggleMenu} className="mb-6 font-bold">
                 <FaHome className="text-4xl text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" />
               </Link>
-              <button onClick={openSobreModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
+              <button onClick={openSobreModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
                 Sobre
               </button>
               {userEmail ? (
@@ -243,43 +243,43 @@ const Navbar: React.FC = () => {
                   {userRoles.includes('Admin') && (
                     <div className="bg-[#5c3a2e] rounded w-full px-4 py-2 mb-4">
                       <p className="text-sm font-bold text-[#F1E4A6] mb-2">Administração</p>
-                      <Link href="/admin" className="block py-1 hover:bg-[#61B785]" onClick={toggleMenu}>
+                      <Link href="/admin" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
                         Cadastrar Produtos
                       </Link>
-                      <Link href="/listar" className="block py-1 hover:bg-[#61B785]" onClick={toggleMenu}>
+                      <Link href="/listar" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
                         Listar Produtos
                       </Link>
-                      <Link href="/editar" className="block py-1 hover:bg-[#61B785]" onClick={toggleMenu}>
+                      <Link href="/editar" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
                         Editar Produtos
                       </Link>
-                      <Link href="/excluir" className="block py-1 hover:bg-[#61B785]" onClick={toggleMenu}>
+                      <Link href="/excluir" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
                         Excluir Produto
                       </Link>
                     </div>
                   )}
-                  {!userRoles.includes('Admin') && ( // Oculta a lista de desejos para administradores
-                    <button onClick={openWishlistModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
+                  {!userRoles.includes('Admin') && (
+                    <button onClick={openWishlistModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
                       Minha Lista de Desejos
                     </button>
                   )}
-                  <Link href="/painel" className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300" onClick={toggleMenu}>
+                  <Link href="/painel" className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold" onClick={toggleMenu}>
                     Editar Perfil
                   </Link>
-                  <button onClick={handleLogout} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
+                  <button onClick={handleLogout} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
                     Sair
                   </button>
                 </>
               ) : (
                 <>
-                  <button onClick={openLoginModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
+                  <button onClick={openLoginModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
                     Login
                   </button>
-                  <button onClick={openRegisterModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
+                  <button onClick={openRegisterModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
                     Cadastrar
                   </button>
                 </>
               )}
-              <button onClick={openContatoModal} className="text-lg hover:text-[#61B785] transition-colors duration-300">
+              <button onClick={openContatoModal} className="text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
                 Contato
               </button>
               <p className="mt-4 text-sm text-[#F1E4A6]">Nosso Contato: (92) 99192-1009</p>
