@@ -186,105 +186,111 @@ const ProductsList: React.FC = () => {
         </div>
 
         <div className="w-full md:w-3/4">
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredProducts.slice(0, visibleCount).map((product) => (
-              <li
-                key={product.id}
-                className="bg-[#FDFDFD] border border-[#432721] rounded-lg shadow hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden mx-2 sm:mx-0 flex flex-col justify-between"
-              >
-                <div className="overflow-hidden rounded-t-lg cursor-pointer relative">
-                  <Image
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
-                    width={500}
-                    height={500}
-                    onClick={() =>
-                      openImageModal(product.imageUrl, product.name)
-                    }
-                  />
-                  <button
-                    className="absolute top-2 right-2 text-[#E56446] hover:text-[#432721] transition-colors duration-200"
-                    onClick={() => toggleFavorite(product.id)}
-                  >
-                    {favoriteProducts.includes(product.id) ? (
-                      <FaHeart size={24} />
-                    ) : (
-                      <FaRegHeart size={24} />
-                    )}
-                  </button>
-                </div>
-                <div className="p-4 flex flex-col flex-grow justify-between">
-                  <div className="flex-grow">
-                    <h2 className="text-lg font-semibold text-[#432721] mb-2 hover:text-[#E56446] transition-colors duration-200">
-                      {product.name}
-                    </h2>
-                    <p className="text-base text-[#432721] mb-1 font-semibold">
-                      Preço:{' '}
-                      <span className="text-[#E56446] font-bold text-xl">
-                        R$
-                        {product.price.toLocaleString('pt-BR', {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                      </span>
-                    </p>
-                    
-                    {typeof product.description === 'string' &&
-                      product.description.trim() === 'Feito por encomenda' && (
-                        <p className="text-sm text-[#432721] mb-2 font-bold">
-                          {product.description}
-                        </p>
+          {/* Verifica se existem produtos filtrados */}
+          {filteredProducts.length > 0 ? (
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredProducts.slice(0, visibleCount).map((product) => (
+                <li
+                  key={product.id}
+                  className="bg-[#FDFDFD] border border-[#432721] rounded-lg shadow hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden mx-2 sm:mx-0 flex flex-col justify-between"
+                >
+                  <div className="overflow-hidden rounded-t-lg cursor-pointer relative">
+                    <Image
+                      src={product.imageUrl}
+                      alt={product.name}
+                      className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
+                      width={500}
+                      height={500}
+                      onClick={() =>
+                        openImageModal(product.imageUrl, product.name)
+                      }
+                    />
+                    <button
+                      className="absolute top-2 right-2 text-[#E56446] hover:text-[#432721] transition-colors duration-200"
+                      onClick={() => toggleFavorite(product.id)}
+                    >
+                      {favoriteProducts.includes(product.id) ? (
+                        <FaHeart size={24} />
+                      ) : (
+                        <FaRegHeart size={24} />
                       )}
-
-                    <p className="text-sm text-[#432721] mb-2 font-bold">
-                      Cor: <span className="font-medium">{product.color}</span>
-                    </p>
+                    </button>
                   </div>
-
-                  <div className="mt-auto">
-                    {typeof product.description === 'string' &&
-                      product.description.trim() === 'Feito por encomenda' && (
-                        <button
-                          onClick={() => handleWhatsappRedirect(product)}
-                          className="w-full py-2 px-4 bg-[#61B785] text-white rounded hover:bg-[#734230] transition-colors duration-200"
-                        >
-                          Encomendar
-                        </button>
-                      )}
-                    
-                    {/* Mostrar quantidade e outros textos somente se não for "Feito por encomenda" */}
-                    {product.description.trim() !== 'Feito por encomenda' && (
-                      <>
-                        <p className="text-sm text-[#432721] mb-2 font-bold">
-                          Quantidade:{' '}
-                          <span className="font-medium">
-                            {product.stockQuantity} Un
-                          </span>
-                        </p>
-                        {product.stockQuantity < 2 ? (
-                          <p className="text-[#E56446] font-bold text-sm mb-2">
-                            Compre já, poucas unidades!
-                          </p>
-                        ) : (
-                          <p className="text-[#61B785] font-bold text-sm mb-2">
-                            Em estoque
+                  <div className="p-4 flex flex-col flex-grow justify-between">
+                    <div className="flex-grow">
+                      <h2 className="text-lg font-semibold text-[#432721] mb-2 hover:text-[#E56446] transition-colors duration-200">
+                        {product.name}
+                      </h2>
+                      <p className="text-base text-[#432721] mb-1 font-semibold">
+                        Preço:{' '}
+                        <span className="text-[#E56446] font-bold text-xl">
+                          R$
+                          {product.price.toLocaleString('pt-BR', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </span>
+                      </p>
+                      
+                      {typeof product.description === 'string' &&
+                        product.description.trim() === 'Feito por encomenda' && (
+                          <p className="text-sm text-[#432721] mb-2 font-bold">
+                            {product.description}
                           </p>
                         )}
-                        {/* Mostrar botão "Comprar" */}
-                        <button
-                          onClick={() => handleWhatsappRedirect(product)}
-                          className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
-                        >
-                          <FaWhatsapp className="mr-2 text-xl" /> Comprar
-                        </button>
-                      </>
-                    )}
+
+                      <p className="text-sm text-[#432721] mb-2 font-bold">
+                        Cor: <span className="font-medium">{product.color}</span>
+                      </p>
+                    </div>
+
+                    <div className="mt-auto">
+                      {typeof product.description === 'string' &&
+                        product.description.trim() === 'Feito por encomenda' && (
+                          <button
+                            onClick={() => handleWhatsappRedirect(product)}
+                            className="w-full py-2 px-4 bg-[#61B785] text-white rounded hover:bg-[#734230] transition-colors duration-200"
+                          >
+                            Encomendar
+                          </button>
+                        )}
+                      
+                      {/* Mostrar quantidade e outros textos somente se não for "Feito por encomenda" */}
+                      {product.description.trim() !== 'Feito por encomenda' && (
+                        <>
+                          <p className="text-sm text-[#432721] mb-2 font-bold">
+                            Quantidade:{' '}
+                            <span className="font-medium">
+                              {product.stockQuantity} Un
+                            </span>
+                          </p>
+                          {product.stockQuantity < 2 ? (
+                            <p className="text-[#E56446] font-bold text-sm mb-2">
+                              Compre já, poucas unidades!
+                            </p>
+                          ) : (
+                            <p className="text-[#61B785] font-bold text-sm mb-2">
+                              Em estoque
+                            </p>
+                          )}
+                          {/* Mostrar botão "Comprar" */}
+                          <button
+                            onClick={() => handleWhatsappRedirect(product)}
+                            className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
+                          >
+                            <FaWhatsapp className="mr-2 text-xl" /> Comprar
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            // Exibir mensagem quando nenhum produto for encontrado
+            <p className="text-center text-red-500">Nenhum produto encontrado com o nome informado.</p>
+          )}
           {filteredProducts.length > visibleCount && (
             <div className="flex justify-center mt-6">
               <button
