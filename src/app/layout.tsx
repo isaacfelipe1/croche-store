@@ -7,12 +7,12 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "loja de crochê",
-  description: "Aqui você vai encontrar o melhor crochê para seu lar! Trabalhamos com encomendas e prontas entregas! ",
+  description: "Aqui você vai encontrar o melhor crochê para seu lar! Trabalhamos com encomendas e pronta entrega!",
   viewport: "width=device-width, initial-scale=1",
   keywords: ["crochê", "venda", "compra"],
   openGraph: {
     title: "loja de crochê",
-    description: "Aqui você vai comprar e vender seu crochê",
+    description: "Aqui você vai encontrar o melhor crochê para seu lar! Trabalhamos com encomendas e pronta entrega!",
     images: [
       {
         url: "https://croche-store1.s3.us-east-2.amazonaws.com/NovaLogoAmorECroche.png", // Substitua pelo URL da imagem desejada
