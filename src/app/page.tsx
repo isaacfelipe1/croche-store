@@ -6,7 +6,7 @@ import {
   FaRegHeart,
   FaSearch,
   FaSpinner,
-} from 'react-icons/fa' // Adicionando FaSpinner
+} from 'react-icons/fa'
 import { getProducts, Product } from '../app/api'
 import CategoryFilter from '../app/components/categoryFilter'
 import ImageModal from '../app/components/imageModal'
@@ -103,7 +103,7 @@ const ProductsList: React.FC = () => {
     localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites))
   }
 
-  const handleWhatsappPurchase = (product: Product) => {
+  const handleWhatsappRedirect = (product: Product) => {
     const cookies = parseCookies()
     const token = cookies.token
 
@@ -235,7 +235,6 @@ const ProductsList: React.FC = () => {
                           {product.description}
                         </p>
                       )}
-
                     <p className="text-sm text-[#432721] mb-2 font-bold">
                       Cor: <span className="font-medium">{product.color}</span>
                     </p>
@@ -255,12 +254,24 @@ const ProductsList: React.FC = () => {
                       </p>
                     )}
                   </div>
-                  <button
-                    onClick={() => handleWhatsappPurchase(product)}
-                    className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center mt-4"
-                  >
-                    <FaWhatsapp className="mr-2 text-xl" /> Comprar
-                  </button>
+                  <div className="mt-4">
+                    {typeof product.description === 'string' &&
+                    product.description.trim() === 'Feito por encomenda' ? (
+                      <button
+                        onClick={() => handleWhatsappRedirect(product)}
+                        className="w-full py-2 px-4 bg-[#61B785] text-white rounded hover:bg-[#734230] transition-colors duration-200"
+                      >
+                        Encomendar
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleWhatsappRedirect(product)}
+                        className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
+                      >
+                        <FaWhatsapp className="mr-2 text-xl" /> Comprar
+                      </button>
+                    )}
+                  </div>
                 </div>
               </li>
             ))}
