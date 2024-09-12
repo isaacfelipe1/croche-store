@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <head>
-        <link rel="shortcut icon" href="https://croche-store1.s3.us-east-2.amazonaws.com/NovaLogoAmorECroche.png" type="image/x-icon" />
+        <link rel="icon" href="https://croche-store1.s3.us-east-2.amazonaws.com/NovaLogoAmorECroche.png" />
       </head>
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <Navbar />
