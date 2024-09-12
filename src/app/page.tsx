@@ -112,7 +112,7 @@ const ProductsList: React.FC = () => {
       return
     }
 
-    const phoneNumber = '5592991921009'
+    const phoneNumber = '5592991928559'
     const message = `Olá!\nEstou interessado em comprar o produto: *${product.name}*\nCor: _${product.color}_\nPreço: *R$${product.price.toLocaleString(
       'pt-BR',
       { minimumFractionDigits: 2, maximumFractionDigits: 2 },
