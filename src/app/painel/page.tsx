@@ -68,7 +68,7 @@ const EditProfile: React.FC = () => {
 
         window.dispatchEvent(new CustomEvent('accountDeleted'));
 
-        router.push('/login');
+        router.push('/');
       } else {
         return true;
       }
