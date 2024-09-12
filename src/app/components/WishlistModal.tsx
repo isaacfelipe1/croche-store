@@ -55,7 +55,7 @@ const WishlistModal: React.FC<WishlistModalProps> = ({ isOpen, onClose }) => {
           {favoriteProducts.map((product) => (
             <li key={product.id} className="mb-4 flex items-center">
               <img
-                src={`http://localhost:5207${product.imageUrl}`}
+                src={product.imageUrl} // Usa a URL completa retornada do S3
                 alt={product.name}
                 className="w-16 h-16 mr-4 object-cover rounded"
               />
