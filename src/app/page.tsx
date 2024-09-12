@@ -206,10 +206,10 @@ const ProductsList: React.FC = () => {
                         R${product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
                     </p>
-                    <p className="text-sm text-[#432721] mb-2">
+                    <p className="text-sm text-[#432721] mb-2 font-bold">
                       Cor: <span className="font-medium">{product.color}</span>
                     </p>
-                    <p className="text-sm text-[#432721] mb-2">
+                    <p className="text-sm text-[#432721] mb-2 font-bold">
                       Quantidade: <span className="font-medium">{product.stockQuantity} Un</span>
                     </p>
                     {product.stockQuantity < 2 ? (
