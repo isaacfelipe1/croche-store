@@ -82,6 +82,7 @@ const ProductsList: React.FC = () => {
     setFilteredProducts(filtered);
   }, [selectedCategory, searchTerm, products]);
 
+
   const toggleFavorite = (productId: number) => {
     if (!isLoggedIn) {
       setAlertMessage('Você precisa estar logado para favoritar um produto.');
