@@ -1,45 +1,52 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { FiLock, FiMail, FiUser } from 'react-icons/fi'
-import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import withAuth from '../../hoc/withAuth'
-import AlertModal from '../components/AlertModal'
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { FiLock, FiMail, FiUser } from 'react-icons/fi';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import withAuth from '../../hoc/withAuth';
+import AlertModal from '../components/AlertModal';
+import { parseCookies } from 'nookies';
 
 const EditProfile: React.FC = () => {
-  const [email, setEmail] = useState('')
-  const [nome, setNome] = useState('')
-  const [currentPassword, setCurrentPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [userId, setUserId] = useState<string | null>(null)
-  const [message, setMessage] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
-  const [showNewPassword, setShowNewPassword] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState('');
+  const [nome, setNome] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [userId, setUserId] = useState<string | null>(null);
+  const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId')
-    const token = localStorage.getItem('token')
+    const cookies = parseCookies();
+    const token = cookies.token; // Obtendo o token dos cookies
+    const storedUserId = cookies.userId; // Obtendo o userId dos cookies
 
-    if (storedUserId && token) setUserId(storedUserId)
-    else router.push('/')
-  }, [router])
+    if (storedUserId && token) {
+      setUserId(storedUserId);
+    } else {
+      // Se não estiver autenticado, redireciona para a página de login
+      router.push('/login');
+    }
+  }, [router]);
 
   const handleAuthError = (error: string) => {
-    setMessage(error)
-    console.error(error)
-    setIsLoading(false)
-    setIsModalOpen(true)
-  }
+    setMessage(error);
+    console.error(error);
+    setIsLoading(false);
+    setIsModalOpen(true);
+  };
 
   const handleAction = async (url: string, method: string, body?: object) => {
-    const token = localStorage.getItem('token')
+    const cookies = parseCookies();
+    const token = cookies.token;
     if (!userId || !token)
-      return handleAuthError('Token de autenticação não encontrado.')
+      return handleAuthError('Token de autenticação não encontrado.');
 
     try {
       const response = await fetch(url, {
@@ -49,59 +56,66 @@ const EditProfile: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
         body: body ? JSON.stringify(body) : undefined,
-      })
+      });
 
-      if (!response.ok) throw new Error('Erro na operação.')
+      if (!response.ok) throw new Error('Erro na operação.');
 
       if (method === 'DELETE') {
-        localStorage.removeItem('token')
-        localStorage.removeItem('userId')
-        setMessage('Conta excluída com sucesso!')
-        setIsModalOpen(true)
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        setMessage('Conta excluída com sucesso!');
+        setIsModalOpen(true);
 
-        window.dispatchEvent(new CustomEvent('accountDeleted'))
+        window.dispatchEvent(new CustomEvent('accountDeleted'));
 
-        router.push('/')
+        router.push('/login');
       } else {
-        return true
+        return true;
       }
     } catch (error) {
-      handleAuthError('Erro na operação. Por favor, tente novamente.')
-      return false
+      handleAuthError('Erro na operação. Por favor, tente novamente.');
+      return false;
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleUpdate = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    const success = await handleAction(`https://crochetstoreapi.onrender.com/Auth/edit/${userId}`, 'PUT', {
-      email,
-      nome,
-      currentPassword,
-      password: newPassword,
-    })
+    e.preventDefault();
+    setIsLoading(true);
+    const success = await handleAction(
+      `https://crochetstoreapi.onrender.com/Auth/edit/${userId}`,
+      'PUT',
+      {
+        email,
+        nome,
+        currentPassword,
+        password: newPassword,
+      }
+    );
     if (success) {
-      setMessage('Perfil atualizado com sucesso!')
-      setIsModalOpen(true)
+      setMessage('Perfil atualizado com sucesso!');
+      setIsModalOpen(true);
     }
-  }
+  };
 
   const handleDeleteAccount = () => {
-    setIsConfirmModalOpen(true)
-  }
+    setIsConfirmModalOpen(true);
+  };
 
   const confirmDeleteAccount = () => {
-    setIsConfirmModalOpen(false)
-    setIsLoading(true)
-    handleAction(`https://crochetstoreapi.onrender.com/Auth/delete/${userId}`, 'DELETE')
-  }
+    setIsConfirmModalOpen(false);
+    setIsLoading(true);
+    handleAction(
+      `https://crochetstoreapi.onrender.com/Auth/delete/${userId}`,
+      'DELETE'
+    );
+  };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setMessage('')
-  }
+    setIsModalOpen(false);
+    setMessage('');
+  };
 
   return (
     <div className="max-w-md mx-auto mt-15 p-20 bg-white rounded shadow">
@@ -110,7 +124,10 @@ const EditProfile: React.FC = () => {
       </h2>
       <form onSubmit={handleUpdate}>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-800">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-800"
+          >
             Email
           </label>
           <div className="flex items-center mt-1 border rounded">
@@ -125,7 +142,10 @@ const EditProfile: React.FC = () => {
           </div>
         </div>
         <div className="mb-4">
-          <label htmlFor="nome" className="block text-sm font-medium text-gray-800">
+          <label
+            htmlFor="nome"
+            className="block text-sm font-medium text-gray-800"
+          >
             Nome
           </label>
           <div className="flex items-center mt-1 border rounded">
@@ -140,7 +160,10 @@ const EditProfile: React.FC = () => {
           </div>
         </div>
         <div className="mb-4">
-          <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-800">
+          <label
+            htmlFor="currentPassword"
+            className="block text-sm font-medium text-gray-800"
+          >
             Senha Atual
           </label>
           <div className="flex items-center mt-1 border rounded relative">
@@ -162,7 +185,10 @@ const EditProfile: React.FC = () => {
           </div>
         </div>
         <div className="mb-4">
-          <label htmlFor="newPassword" className="block text-sm font-medium text-gray-800">
+          <label
+            htmlFor="newPassword"
+            className="block text-sm font-medium text-gray-800"
+          >
             Nova Senha
           </label>
           <div className="flex items-center mt-1 border rounded relative">
@@ -217,7 +243,7 @@ const EditProfile: React.FC = () => {
         confirmButtonText="Excluir"
       />
     </div>
-  )
-}
+  );
+};
 
-export default withAuth(EditProfile)
+export default withAuth(EditProfile);
