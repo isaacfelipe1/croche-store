@@ -17,8 +17,8 @@ const ContatoModal: React.FC<ContatoModalProps> = ({ isOpen, onClose }) => {
         <li>
           <strong>Email:</strong> <a href="mailto:amorcroche5252@gmail.com" className="text-blue-500 underline">amorcroche5252@gmail.com</a>
         </li>
-        <li><strong>Telefone:</strong> (92) 99192-8559</li>
-        <li><strong>Endereço:</strong> Rua Serudo Martins, 123, Centro, Itacoatiara</li>
+        <li><strong>Whatsapp:</strong> (92) 99192-8559</li>
+        <li><strong>Endereço:</strong> Rua Serudo Martins, 1073, Centro, Itacoatiara. APTO A</li>
       </ul>
       <p className="text-gray-700">
         Ou envie-nos uma mensagem diretamente no nosso WhatsApp.
