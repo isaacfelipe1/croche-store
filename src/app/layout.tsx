@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "loja de crochê",
-  description: "Aqui você vai encontrar o melhor crochê para seu lar! Trabalhamos com encomenda e prontas entregas! ",
+  description: "Aqui você vai encontrar o melhor crochê para seu lar! Trabalhamos com encomendas e prontas entregas! ",
   viewport: "width=device-width, initial-scale=1",
   keywords: ["crochê", "venda", "compra"],
   openGraph: {
