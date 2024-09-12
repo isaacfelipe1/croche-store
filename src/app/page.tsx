@@ -215,7 +215,7 @@ const ProductsList: React.FC = () => {
                   </button>
                 </div>
                 <div className="p-4 flex flex-col flex-grow justify-between">
-                  <div>
+                  <div className="flex-grow">
                     <h2 className="text-lg font-semibold text-[#432721] mb-2 hover:text-[#E56446] transition-colors duration-200">
                       {product.name}
                     </h2>
@@ -229,47 +229,56 @@ const ProductsList: React.FC = () => {
                         })}
                       </span>
                     </p>
+                    
                     {typeof product.description === 'string' &&
                       product.description.trim() === 'Feito por encomenda' && (
                         <p className="text-sm text-[#432721] mb-2 font-bold">
                           {product.description}
                         </p>
                       )}
+
                     <p className="text-sm text-[#432721] mb-2 font-bold">
                       Cor: <span className="font-medium">{product.color}</span>
                     </p>
-                    <p className="text-sm text-[#432721] mb-2 font-bold">
-                      Quantidade:{' '}
-                      <span className="font-medium">
-                        {product.stockQuantity} Un
-                      </span>
-                    </p>
-                    {product.stockQuantity < 2 ? (
-                      <p className="text-[#E56446] font-bold text-sm mb-2">
-                        Compre já, poucas unidades!
-                      </p>
-                    ) : (
-                      <p className="text-[#61B785] font-bold text-sm mb-2">
-                        Em estoque
-                      </p>
-                    )}
                   </div>
-                  <div className="mt-4">
+
+                  <div className="mt-auto">
                     {typeof product.description === 'string' &&
-                    product.description.trim() === 'Feito por encomenda' ? (
-                      <button
-                        onClick={() => handleWhatsappRedirect(product)}
-                        className="w-full py-2 px-4 bg-[#61B785] text-white rounded hover:bg-[#734230] transition-colors duration-200"
-                      >
-                        Encomendar
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleWhatsappRedirect(product)}
-                        className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
-                      >
-                        <FaWhatsapp className="mr-2 text-xl" /> Comprar
-                      </button>
+                      product.description.trim() === 'Feito por encomenda' && (
+                        <button
+                          onClick={() => handleWhatsappRedirect(product)}
+                          className="w-full py-2 px-4 bg-[#61B785] text-white rounded hover:bg-[#734230] transition-colors duration-200"
+                        >
+                          Encomendar
+                        </button>
+                      )}
+                    
+                    {/* Mostrar quantidade e outros textos somente se não for "Feito por encomenda" */}
+                    {product.description.trim() !== 'Feito por encomenda' && (
+                      <>
+                        <p className="text-sm text-[#432721] mb-2 font-bold">
+                          Quantidade:{' '}
+                          <span className="font-medium">
+                            {product.stockQuantity} Un
+                          </span>
+                        </p>
+                        {product.stockQuantity < 2 ? (
+                          <p className="text-[#E56446] font-bold text-sm mb-2">
+                            Compre já, poucas unidades!
+                          </p>
+                        ) : (
+                          <p className="text-[#61B785] font-bold text-sm mb-2">
+                            Em estoque
+                          </p>
+                        )}
+                        {/* Mostrar botão "Comprar" */}
+                        <button
+                          onClick={() => handleWhatsappRedirect(product)}
+                          className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
+                        >
+                          <FaWhatsapp className="mr-2 text-xl" /> Comprar
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
