@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     description: "Aqui você vai comprar e vender seu crochê",
     images: [
       {
-        url: "https://croche-store1.s3.us-east-2.amazonaws.com/logoLoja.jpg", // Substitua pelo URL da imagem desejada
+        url: "https://croche-store1.s3.us-east-2.amazonaws.com/NovaLogoAmorECroche.png", // Substitua pelo URL da imagem desejada
         width: 1200, // Largura da imagem
         height: 630,  // Altura da imagem
         alt: "Imagem representando a loja de crochê", // Texto alternativo para a imagem
