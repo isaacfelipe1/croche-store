@@ -1,11 +1,11 @@
 "use client";
 import React, { useEffect, useState, memo } from 'react';
-import { FaWhatsapp, FaHeart, FaRegHeart, FaSearch } from 'react-icons/fa';
+import { FaWhatsapp, FaHeart, FaRegHeart, FaSearch, FaSpinner } from 'react-icons/fa'; // Adicionando FaSpinner
 import { getProducts, Product } from '../app/api';
 import CategoryFilter from '../app/components/categoryFilter';
 import ImageModal from '../app/components/imageModal';
 import Alert from '../app/components/alert';
-import { parseCookies } from 'nookies'; // Importando nookies
+import { parseCookies } from 'nookies';
 
 const ProductsList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -44,10 +44,9 @@ const ProductsList: React.FC = () => {
 
     fetchProducts();
 
-    // Obtendo o token dos cookies usando nookies
     const cookies = parseCookies();
     const token = cookies.token;
-    setIsLoggedIn(!!token); // Verifica se o usuário está logado com base na presença do token
+    setIsLoggedIn(!!token);
 
     const savedFavorites = JSON.parse(
       localStorage.getItem('favoriteProducts') || '[]',
@@ -57,7 +56,7 @@ const ProductsList: React.FC = () => {
     const handleStorageChange = () => {
       const cookies = parseCookies();
       const updatedToken = cookies.token;
-      setIsLoggedIn(!!updatedToken); // Atualiza o estado de login com base no token atualizado
+      setIsLoggedIn(!!updatedToken);
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -98,7 +97,6 @@ const ProductsList: React.FC = () => {
   };
 
   const handleWhatsappPurchase = (product: Product) => {
-    // Obtendo o token dos cookies usando nookies
     const cookies = parseCookies();
     const token = cookies.token;
 
@@ -135,7 +133,12 @@ const ProductsList: React.FC = () => {
   );
 
   if (loading)
-    return <p className="text-center text-lg mt-4">Carregando produtos...</p>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FaSpinner className="animate-spin text-4xl text-[#432721]" />
+        <p className="ml-2 text-center text-lg mt-4">Carregando produtos...</p>
+      </div>
+    );
   if (error) return <p className="text-center text-red-500 mt-4">{error}</p>;
 
   return (
