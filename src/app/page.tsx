@@ -1,5 +1,4 @@
-'use client'
-
+"use client"
 import React, { useEffect, useState, memo } from 'react'
 import { FaWhatsapp, FaHeart, FaRegHeart, FaSearch } from 'react-icons/fa' 
 import { getProducts, Product } from '../app/api'
@@ -195,7 +194,7 @@ const ProductsList: React.FC = () => {
                     <h2 className="text-lg font-semibold text-[#432721] mb-2 hover:text-[#E56446] transition-colors duration-200">
                       {product.name}
                     </h2>
-                    <p className="text-sm text-gray-700 mb-2">{product.description}</p> {/* Tamanho da fonte da descrição reduzido */}
+                    {/* Descrição do produto removida */}
                     <p className="text-base text-[#432721] mb-1 font-semibold">
                       Preço:{' '}
                       <span className="text-[#E56446] font-bold text-xl">
