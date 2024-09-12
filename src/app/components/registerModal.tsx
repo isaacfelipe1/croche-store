@@ -9,7 +9,7 @@ interface RegisterModalProps {
 }
 
 const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegisterSuccess }) => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', phoneNumber: '', password: '', confirmPassword: '' });
   const [showPassword, setShowPassword] = useState({ password: false, confirmPassword: false });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -63,10 +63,10 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
         <h2 className="text-xl font-semibold mb-4 text-[#734230] dark:text-white">Cadastro</h2>
         {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
         <form onSubmit={handleRegister} className="w-full">
-          {['name', 'email', 'password', 'confirmPassword'].map((field) => (
+          {['name', 'email', 'phoneNumber', 'password', 'confirmPassword'].map((field) => (
             <div className="mb-4 relative" key={field}>
               <label htmlFor={field} className="block text-gray-600 dark:text-gray-300 font-medium text-sm mb-1">
-                {field === 'confirmPassword' ? 'Confirmar Senha' : field.charAt(0).toUpperCase() + field.slice(1)}
+                {field === 'confirmPassword' ? 'Confirmar Senha' : field === 'phoneNumber' ? 'Telefone' : field.charAt(0).toUpperCase() + field.slice(1)}
               </label>
               <div className="relative">
                 <input
