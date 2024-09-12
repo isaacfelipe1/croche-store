@@ -8,6 +8,14 @@ const nextConfig = {
       },
     ];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'croche-store1.s3.amazonaws.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

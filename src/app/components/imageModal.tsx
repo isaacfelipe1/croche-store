@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from './modal';
+import Image from 'next/image';
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -12,9 +13,11 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl, altT
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex justify-center items-center animate-fadeIn">
-        <img
+        <Image
           src={imageUrl} // Use a URL completa retornada diretamente do S3
           alt={altText}
+          width={1000}
+          height={1000}
           className="max-w-full max-h-[80vh] object-contain"
           loading="lazy"
         />
