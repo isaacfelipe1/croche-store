@@ -4,11 +4,12 @@ import { FaEye, FaEyeSlash, FaSpinner, FaSun, FaMoon } from 'react-icons/fa';
 import Modal from './modal';
 import RegisterModal from './registerModal'; 
 import { FiLock } from 'react-icons/fi';
+import { setCookie, parseCookies } from 'nookies'; // Importando nookies
 
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onLoginSuccess: (token: string, userId: string, roles: string[]) => void; // Adicione 'roles' aqui
+  onLoginSuccess: (token: string, userId: string, roles: string[]) => void;
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess }) => {
@@ -35,7 +36,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
       const parsedToken = JSON.parse(jsonPayload);
       const email = parsedToken.sub;
 
-      // Verifica o campo de papel específico
       const roles = Array.isArray(parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
         ? parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
         : [parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]];
@@ -68,13 +68,20 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
       const { token, userId } = await response.json(); 
       console.log('Login bem-sucedido, token e userId recebidos:', token, userId);
 
-      localStorage.setItem('token', token);
-      localStorage.setItem('userId', userId.toString()); 
-      window.dispatchEvent(new Event('storage')); 
+      // Armazenando token e userId em cookies
+      setCookie(null, 'token', token, {
+        maxAge: 30 * 24 * 60 * 60, // 30 dias
+        path: '/',
+      });
+
+      setCookie(null, 'userId', userId.toString(), {
+        maxAge: 30 * 24 * 60 * 60,
+        path: '/',
+      });
 
       const decoded = decodeToken(token);
       if (decoded) {
-        onLoginSuccess(token, userId, decoded.roles); // Passe o token, userId e roles
+        onLoginSuccess(token, userId, decoded.roles);
       } else {
         throw new Error('Falha ao decodificar o token.');
       }
@@ -106,7 +113,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
 
   const handleOpenRegisterModal = () => {
     setIsRegisterModalOpen(true);
-    onClose(); // Fecha o modal de login ao abrir o de registro
+    onClose(); 
   };
 
   const handleCloseRegisterModal = () => {
@@ -114,8 +121,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
   };
 
   const handleRegisterSuccess = (token: string, userId: string) => {
-    // Autentica o usuário imediatamente após o registro
-    onLoginSuccess(token, userId, []); // Inicialmente sem roles, até o login decodificar
+    onLoginSuccess(token, userId, []);
     handleCloseRegisterModal(); 
   };
 
@@ -138,7 +144,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
           <h2 className="text-3xl font-semibold text-center mb-6 text-[#734230] dark:text-white">Login</h2>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <form onSubmit={handleLogin}>
-            {/* Campo de Email */}
             <div className="mb-5">
               <label htmlFor="email" className="block text-gray-600 dark:text-gray-300 font-medium mb-1">Email</label>
               <input
@@ -155,7 +160,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
               />
               {!isEmailValid && <p className="text-red-500 text-sm">Por favor, insira um e-mail válido.</p>}
             </div>
-            {/* Campo de Senha */}
             <div className="mb-5 relative">
               <label htmlFor="password" className="block text-gray-600 dark:text-gray-300 font-medium mb-1">Senha</label>
               <input
@@ -175,7 +179,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
                 {showPassword ? <FaEyeSlash size={20} className='mt-4' /> : <FaEye size={20} className='mt-4' />}
               </button>
             </div>
-            {/* Botão de Login */}
             <button
               type="submit"
               className={`w-full bg-[#61B785] text-white py-3 rounded-lg font-semibold hover:bg-[#734230] transition-colors duration-200 shadow-md hover:shadow-lg flex justify-center items-center ${
@@ -190,11 +193,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
               )}
             </button>
           </form>
-          {/* Botão para alternar o tema com ícone */}
           <button onClick={toggleTheme} className="mt-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center justify-center">
             {theme === 'dark' ? <FaSun size={20} /> : <FaMoon size={20} />}
           </button>
-          {/* Botão para abrir o modal de cadastro */}
           <p className="mt-4 text-center text-gray-600 dark:text-gray-300">Não está cadastrado? 
             <button onClick={handleOpenRegisterModal} className="text-[#734230] dark:text-white font-semibold hover:underline ml-1">
               Cadastre-se
@@ -203,7 +204,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
         </div>
       </Modal>
 
-      {/* Modal de Cadastro */}
       <RegisterModal
         isOpen={isRegisterModalOpen}
         onClose={handleCloseRegisterModal}
