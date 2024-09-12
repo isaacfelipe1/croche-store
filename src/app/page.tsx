@@ -6,7 +6,7 @@ import CategoryFilter from '../app/components/categoryFilter';
 import ImageModal from '../app/components/imageModal';
 import Alert from '../app/components/alert';
 import { parseCookies } from 'nookies';
-
+import Image from 'next/image';
 const ProductsList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -181,10 +181,12 @@ const ProductsList: React.FC = () => {
                 className="bg-[#FDFDFD] border border-[#432721] rounded-lg shadow hover:shadow-lg transition-shadow duration-300 ease-in-out overflow-hidden mx-2 sm:mx-0 flex flex-col justify-between"
               >
                 <div className="overflow-hidden rounded-t-lg cursor-pointer relative">
-                  <img
+                  <Image
                     src={product.imageUrl}
                     alt={product.name}
                     className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
+                    width={500}
+                    height={500}
                     onClick={() => openImageModal(product.imageUrl, product.name)}
                   />
                   <button
