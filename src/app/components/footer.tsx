@@ -11,7 +11,7 @@ const Footer = () => {
         Desenvolvido para você comprar seus produtos!
       </p>
       <div className="flex justify-center mt-4">
-        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+        <a href="https://www.facebook.com/people/Amor-Croch%C3%AA/100095593387200/?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer">
           <FaFacebook className="text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" size={24} />
         </a>
       </div>
