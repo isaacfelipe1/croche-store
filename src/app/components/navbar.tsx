@@ -8,7 +8,7 @@ import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
 import RegisterModal from './registerModal';
 import WishlistModal from './WishlistModal';
-import { parseCookies, setCookie, destroyCookie } from 'nookies'; // Importando nookies
+import { parseCookies, setCookie, destroyCookie } from 'nookies';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,9 +32,8 @@ const Navbar: React.FC = () => {
       );
 
       const parsedToken = JSON.parse(jsonPayload);
-      const email = parsedToken.sub || parsedToken.email; // Garante que o email é obtido corretamente
+      const email = parsedToken.sub || parsedToken.email;
 
-      // Verifica o campo de papel específico e trata como array
       const roles = Array.isArray(parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
         ? parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
         : [parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]].filter(Boolean);
@@ -47,8 +46,8 @@ const Navbar: React.FC = () => {
   };
 
   const handleLogout = () => {
-    destroyCookie(null, 'token'); // Remove o cookie do token
-    destroyCookie(null, 'userId'); // Remove o cookie do userId
+    destroyCookie(null, 'token');
+    destroyCookie(null, 'userId');
     setUserEmail(null);
     setUserRoles([]);
     setIsOpen(false);
@@ -58,7 +57,7 @@ const Navbar: React.FC = () => {
 
   const handleLoginSuccess = (token: string, userId: string, roles: string[]) => {
     setCookie(null, 'token', token, {
-      maxAge: 30 * 24 * 60 * 60, // 30 dias
+      maxAge: 30 * 24 * 60 * 60,
       path: '/',
     });
     setCookie(null, 'userId', userId, {
@@ -73,7 +72,7 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     const cookies = parseCookies();
-    const token = cookies.token; // Obtendo o token dos cookies
+    const token = cookies.token;
     if (token) {
       const decoded = decodeToken(token);
       if (decoded) {
@@ -199,9 +198,11 @@ const Navbar: React.FC = () => {
                       <Link href="/excluir" className="block px-4 py-2 hover:bg-[#61B785]">Excluir Produto</Link>
                     </div>
                   )}
-                  <button onClick={openWishlistModal} className="block px-4 py-2 hover:bg-[#61B785]">
-                    Minha Lista de Desejos
-                  </button>
+                  {!userRoles.includes('Admin') && ( // Oculta a lista de desejos para administradores
+                    <button onClick={openWishlistModal} className="block px-4 py-2 hover:bg-[#61B785]">
+                      Minha Lista de Desejos
+                    </button>
+                  )}
                   <Link href="/painel" className="block px-4 py-2 hover:bg-[#61B785]">Editar Perfil</Link>
                   <button onClick={handleLogout} className="block w-full text-left px-4 py-2 hover:bg-[#61B785]">Sair</button>
                 </div>
@@ -256,9 +257,11 @@ const Navbar: React.FC = () => {
                       </Link>
                     </div>
                   )}
-                  <button onClick={openWishlistModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
-                    Minha Lista de Desejos
-                  </button>
+                  {!userRoles.includes('Admin') && ( // Oculta a lista de desejos para administradores
+                    <button onClick={openWishlistModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300">
+                      Minha Lista de Desejos
+                    </button>
+                  )}
                   <Link href="/painel" className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300" onClick={toggleMenu}>
                     Editar Perfil
                   </Link>
