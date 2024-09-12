@@ -213,7 +213,7 @@ const Navbar: React.FC = () => {
                   Login
                 </button>
                 <button onClick={openRegisterModal} className="py-2 px-3 hover:text-[#61B785] transition-colors duration-300 font-bold">
-                  Cadastrar
+                  Cadastrar-se
                 </button>
               </>
             )}
@@ -275,7 +275,7 @@ const Navbar: React.FC = () => {
                     Login
                   </button>
                   <button onClick={openRegisterModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                    Cadastrar
+                    Cadastrar-se
                   </button>
                 </>
               )}
