@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "loja de crochê",
     description: "Aqui você vai comprar e vender seu crochê",
+    images: [
+      {
+        url: "https://croche-store.vercel.app/", // Substitua pelo URL da imagem desejada
+        width: 1200, // Largura da imagem
+        height: 630,  // Altura da imagem
+        alt: "Imagem representando a loja de crochê", // Texto alternativo para a imagem
+      },
+    ],
   },
   robots: {
     index: true,
