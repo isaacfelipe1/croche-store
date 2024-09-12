@@ -9,14 +9,11 @@ interface ImageModalProps {
 }
 
 const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl, altText }) => {
-  // Adiciona o domínio completo ao URL da imagem
-  const fullImageUrl = `https://crochetstoreapi.onrender.com${imageUrl}`;
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex justify-center items-center animate-fadeIn">
         <img
-          src={fullImageUrl}
+          src={imageUrl} // Use a URL completa retornada diretamente do S3
           alt={altText}
           className="max-w-full max-h-[80vh] object-contain"
           loading="lazy"
