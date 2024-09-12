@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -8,6 +8,7 @@ import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
 import RegisterModal from './registerModal';
 import WishlistModal from './WishlistModal';
+import { parseCookies, setCookie, destroyCookie } from 'nookies'; // Importando nookies
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,9 +30,15 @@ const Navbar: React.FC = () => {
           .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
           .join('')
       );
-      const { sub: email, role } = JSON.parse(jsonPayload);
 
-      const roles = Array.isArray(role) ? role : [role];
+      const parsedToken = JSON.parse(jsonPayload);
+      const email = parsedToken.sub || parsedToken.email; // Garante que o email é obtido corretamente
+
+      // Verifica o campo de papel específico e trata como array
+      const roles = Array.isArray(parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"])
+        ? parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+        : [parsedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]].filter(Boolean);
+      
       return { email, roles };
     } catch (error) {
       console.error('Erro ao decodificar o token:', error);
@@ -40,18 +47,24 @@ const Navbar: React.FC = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+    destroyCookie(null, 'token'); // Remove o cookie do token
+    destroyCookie(null, 'userId'); // Remove o cookie do userId
     setUserEmail(null);
     setUserRoles([]);
     setIsOpen(false);
-    console.log('Usuário deslogado, token e userId removidos.');
+    console.log('Usuário deslogado, cookies removidos.');
     window.dispatchEvent(new Event('storage'));
   };
 
   const handleLoginSuccess = (token: string, userId: string, roles: string[]) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('userId', userId);
+    setCookie(null, 'token', token, {
+      maxAge: 30 * 24 * 60 * 60, // 30 dias
+      path: '/',
+    });
+    setCookie(null, 'userId', userId, {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    });
     setUserEmail(decodeToken(token)?.email ?? null);
     setUserRoles(roles);
     setIsLoginModalOpen(false);
@@ -59,7 +72,8 @@ const Navbar: React.FC = () => {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const cookies = parseCookies();
+    const token = cookies.token; // Obtendo o token dos cookies
     if (token) {
       const decoded = decodeToken(token);
       if (decoded) {
@@ -69,7 +83,8 @@ const Navbar: React.FC = () => {
     }
 
     const handleStorageChange = () => {
-      const token = localStorage.getItem('token');
+      const cookies = parseCookies();
+      const token = cookies.token;
       if (token) {
         const decoded = decodeToken(token);
         if (decoded) {
@@ -215,7 +230,6 @@ const Navbar: React.FC = () => {
         >
           {isOpen && (
             <div className="flex flex-col items-center p-4">
-              {/* Ícone de Home maior para versão mobile */}
               <Link href="/" onClick={toggleMenu} className="mb-6">
                 <FaHome className="text-4xl text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" />
               </Link>
