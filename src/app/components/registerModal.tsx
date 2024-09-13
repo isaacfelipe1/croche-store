@@ -66,7 +66,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
           {['name', 'email', 'phoneNumber', 'password', 'confirmPassword'].map((field) => (
             <div className="mb-4 relative" key={field}>
               <label htmlFor={field} className="block text-gray-600 dark:text-gray-300 font-medium text-sm mb-1">
-                {field === 'confirmPassword' ? 'Confirmar Senha' : field === 'phoneNumber' ? 'Telefone' : field.charAt(0).toUpperCase() + field.slice(1)}
+                {field === 'confirmPassword' ? 'Confirmar Senha' : field === 'phoneNumber' ? 'Telefone*' : field.charAt(0).toUpperCase() + field.slice(1)}
               </label>
               <div className="relative">
                 <input
