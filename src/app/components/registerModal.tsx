@@ -13,7 +13,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
   const [showPassword, setShowPassword] = useState({ password: false, confirmPassword: false });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [e.target.id]: e.target.value });
 
