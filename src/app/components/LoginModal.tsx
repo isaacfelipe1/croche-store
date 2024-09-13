@@ -42,7 +42,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
       
       return { email, roles };
     } catch (error) {
-      console.error('Erro ao decodificar o token:', error);
+      // console.error('Erro ao decodificar o token:', error);
       return null;
     }
   };
@@ -66,7 +66,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
       }
 
       const { token, userId } = await response.json(); 
-      console.log('Login bem-sucedido, token e userId recebidos:', token, userId);
+      // console.log('Login bem-sucedido, token e userId recebidos:', token, userId);
 
       // Armazenando token e userId em cookies
       setCookie(null, 'token', token, {
@@ -86,7 +86,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
         throw new Error('Falha ao decodificar o token.');
       }
     } catch (err) {
-      console.error('Erro ao fazer login:', err);
+      // console.error('Erro ao fazer login:', err);
       setError('Credenciais inválidas. Por favor, tente novamente.');
     } finally {
       setIsLoading(false);
