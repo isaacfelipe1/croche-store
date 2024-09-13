@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Modal from './modal';
 import { FaSpinner, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { IoClose } from 'react-icons/io5'; // Importando o ícone de fechar
 
 interface RegisterModalProps {
   isOpen: boolean;
@@ -59,14 +60,28 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md max-w-lg w-3/4 mx-auto flex flex-col items-center">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md max-w-lg w-3/4 mx-auto flex flex-col items-center relative">
+        {/* Ícone de fechar reposicionado */}
+        <button
+          onClick={onClose}
+          className="absolute right-4 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition focus:outline-none"
+          style={{ top: '19rem' }} // Ajuste para mover o ícone mais para baixo
+        >
+          {/* <IoClose size={24} /> */}
+        </button>
         <h2 className="text-xl font-semibold mb-4 text-[#734230] dark:text-white">Cadastro</h2>
         {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
         <form onSubmit={handleRegister} className="w-full">
           {['name', 'email', 'phoneNumber', 'password', 'confirmPassword'].map((field) => (
             <div className="mb-4 relative" key={field}>
               <label htmlFor={field} className="block text-gray-600 dark:text-gray-300 font-medium text-sm mb-1">
-                {field === 'confirmPassword' ? 'Confirmar Senha' : field === 'phoneNumber' ? 'Telefone*' : field.charAt(0).toUpperCase() + field.slice(1)}
+                {field === 'confirmPassword'
+                  ? 'Confirmar Senha*'
+                  : field === 'phoneNumber'
+                  ? 'Telefone*'
+                  : field === 'password'
+                  ? 'Criar Senha*'
+                  : `${field.charAt(0).toUpperCase() + field.slice(1)}*`}
               </label>
               <div className="relative">
                 <input
