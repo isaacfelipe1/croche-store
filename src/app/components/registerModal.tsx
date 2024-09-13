@@ -78,7 +78,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
           className="absolute text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition focus:outline-none top-2 right-2"
         >
         </button>
-        <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#734230] dark:text-white">Cadastra-se</h2>
+        <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#734230] dark:text-white">Cadastrar-se</h2>
         {error && <p className="text-red-500 mb-4 text-xs sm:text-sm">{error}</p>}
 
         {step === 1 ? (
