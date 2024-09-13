@@ -17,7 +17,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
         <button
           onClick={onClose}
           className="absolute right-3 text-gray-500 hover:text-gray-700"
-          style={{ top: '1rem', fontSize: '2.2rem' }} // Aumenta o tamanho do botão
+          style={{ fontSize: '2.2rem' }} // Aumenta o tamanho do botão
         >
           &times;
         </button>
