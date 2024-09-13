@@ -61,13 +61,12 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md max-w-lg w-3/4 mx-auto flex flex-col items-center relative">
-        {/* Ícone de fechar reposicionado */}
+        {/* Ícone de fechar reposicionado mais para baixo */}
         <button
           onClick={onClose}
-          className="absolute right-4 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition focus:outline-none"
-          style={{ top: '19rem' }} // Ajuste para mover o ícone mais para baixo
+          className="absolute text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white transition focus:outline-none"
+          style={{ top: '1rem', right: '1rem' }} // Ajuste o valor de 'top' conforme necessário
         >
-          {/* <IoClose size={24} /> */}
         </button>
         <h2 className="text-xl font-semibold mb-4 text-[#734230] dark:text-white">Cadastro</h2>
         {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}

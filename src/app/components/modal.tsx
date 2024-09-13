@@ -13,10 +13,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative bg-white p-6 rounded-lg max-w-xl w-full">
-        {/* Botão de Fechar */}
+        {/* Botão de Fechar maior e reposicionado */}
         <button
           onClick={onClose}
-          className="absolute -top-2 right-3 text-gray-500 hover:text-gray-700 text-2xl"
+          className="absolute right-3 text-gray-500 hover:text-gray-700"
+          style={{ top: '1rem', fontSize: '2.2rem' }} // Aumenta o tamanho do botão
         >
           &times;
         </button>
