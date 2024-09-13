@@ -282,7 +282,7 @@ const Navbar: React.FC = () => {
               <button onClick={openContatoModal} className="text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
                 Contato
               </button>
-              <p className="mt-4 text-sm text-[#F1E4A6]">Nosso Contato: (92) 99192-1009</p>
+              <p className="mt-4 text-sm text-[#F1E4A6]">Nosso Contato: (92) 99192-8559</p>
             </div>
           )}
         </div>
