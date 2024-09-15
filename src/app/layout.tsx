@@ -45,6 +45,8 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <head>
+        {/* Meta tag de verificação do Google */}
+        <meta name="google-site-verification" content="AVrxxVnnTxjRMLjb33XhOwBh-ig3hG6XRFs0FcOA9zk" />
         <link rel="icon" href="https://croche-store1.s3.us-east-2.amazonaws.com/NovaLogoAmorECroche.png" />
       </head>
       <body className={`${inter.className} flex flex-col min-h-screen`}>
