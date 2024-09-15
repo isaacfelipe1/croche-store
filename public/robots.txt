@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://croche-store.vercel.app/
+
+# Sitemaps
+Sitemap: https://croche-store.vercel.app/sitemap.xml

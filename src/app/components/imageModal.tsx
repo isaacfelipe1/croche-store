@@ -14,7 +14,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl, altT
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex justify-center items-center animate-fadeIn">
         <Image
-          src={imageUrl} // Use a URL completa retornada diretamente do S3
+          src={imageUrl} 
           alt={altText}
           width={1000}
           height={1000}

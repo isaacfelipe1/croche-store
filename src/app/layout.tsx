@@ -15,10 +15,10 @@ export const metadata: Metadata = {
     description: "Aqui você vai encontrar o melhor crochê para seu lar! Trabalhamos com encomendas e pronta entrega!",
     images: [
       {
-        url: "https://croche-store1.s3.us-east-2.amazonaws.com/NovaLogoAmorECroche.png", // Substitua pelo URL da imagem desejada
-        width: 1200, // Largura da imagem
-        height: 630,  // Altura da imagem
-        alt: "Imagem representando a loja de crochê", // Texto alternativo para a imagem
+        url: "https://croche-store1.s3.us-east-2.amazonaws.com/NovaLogoAmorECroche.png", 
+        width: 1200, 
+        height: 630, 
+        alt: "Imagem representando a loja de crochê", 
       },
     ],
   },

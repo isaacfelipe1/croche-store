@@ -16,13 +16,8 @@ const WishlistModal: React.FC<WishlistModalProps> = ({ isOpen, onClose }) => {
     const fetchFavoriteProducts = async () => {
       setLoading(true);
       try {
-        // Recupera os IDs dos produtos favoritos do Local Storage
         const savedFavoritesIds = JSON.parse(localStorage.getItem('favoriteProducts') || '[]');
-
-        // Busca todos os produtos da API
         const allProducts = await getProducts();
-
-        // Filtra apenas os produtos que estão na lista de favoritos
         const filteredProducts = allProducts.filter(product =>
           savedFavoritesIds.includes(product.id)
         );

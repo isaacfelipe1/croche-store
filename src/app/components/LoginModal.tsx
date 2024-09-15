@@ -4,7 +4,7 @@ import { FaEye, FaEyeSlash, FaSpinner, FaSun, FaMoon } from 'react-icons/fa';
 import Modal from './modal';
 import RegisterModal from './registerModal'; 
 import { FiLock } from 'react-icons/fi';
-import { setCookie, parseCookies } from 'nookies'; // Importando nookies
+import { setCookie, parseCookies } from 'nookies'; 
 
 interface LoginModalProps {
   isOpen: boolean;

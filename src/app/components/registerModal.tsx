@@ -14,7 +14,7 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
   const [showPassword, setShowPassword] = useState({ password: false, confirmPassword: false });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState(1); // Estado para controlar as etapas do formulário
+  const [step, setStep] = useState(1); 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -25,12 +25,12 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
   const handleNextStep = (e: React.FormEvent) => {
     e.preventDefault();
     if (step === 1 && formData.name && formData.email) {
-      setStep(2); // Passa para a próxima etapa quando nome e email forem preenchidos
+      setStep(2); 
     }
   };
 
   const handlePreviousStep = () => {
-    setStep(1); // Volta para a etapa anterior
+    setStep(1);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -82,7 +82,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
         {error && <p className="text-red-500 mb-4 text-xs sm:text-sm">{error}</p>}
 
         {step === 1 ? (
-          // Primeira etapa do formulário
           <form onSubmit={handleNextStep} className="w-full">
             {['name', 'email'].map((field) => (
               <div className="mb-3 sm:mb-4 relative" key={field}>
@@ -107,7 +106,6 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose, onRegist
             </button>
           </form>
         ) : (
-          // Segunda etapa do formulário
           <form onSubmit={handleRegister} className="w-full">
             {['phoneNumber', 'password', 'confirmPassword'].map((field) => (
               <div className="mb-3 sm:mb-4 relative" key={field}>
