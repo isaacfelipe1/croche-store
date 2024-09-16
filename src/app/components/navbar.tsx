@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaWhatsapp, FaHome } from 'react-icons/fa'; 
+import { FaWhatsapp, FaHome, FaInfoCircle, FaSignInAlt, FaUserPlus, FaEnvelope } from 'react-icons/fa'; 
 import SobreModal from './sobreModal';
 import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
@@ -230,16 +230,16 @@ const Navbar: React.FC = () => {
           }`}
         >
           {isOpen && (
-            <div className="flex flex-col items-center p-4">
-              <Link href="/" onClick={toggleMenu} className="mb-6 font-bold">
+            <div className="flex flex-col items-start p-6 space-y-6">
+              <Link href="/" onClick={toggleMenu} className="flex items-center gap-2 mb-4 font-bold">
                 <FaHome className="text-4xl text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" />
               </Link>
-              <button onClick={openSobreModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                Sobre
+              <button onClick={openSobreModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
+                <FaInfoCircle className="text-2xl" /> Sobre
               </button>
               {userEmail ? (
                 <>
-                  <span className="mb-4 text-lg text-[#F1E4A6]">Olá, {userEmail}</span>
+                  <span className="text-lg text-[#F1E4A6]">Olá, {userEmail}</span>
                   {userRoles.includes('Admin') && (
                     <div className="bg-[#5c3a2e] rounded w-full px-4 py-2 mb-4">
                       <p className="text-sm font-bold text-[#F1E4A6] mb-2">Administração</p>
@@ -258,29 +258,29 @@ const Navbar: React.FC = () => {
                     </div>
                   )}
                   {!userRoles.includes('Admin') && (
-                    <button onClick={openWishlistModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
+                    <button onClick={openWishlistModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
                       Minha Lista de Desejos
                     </button>
                   )}
-                  <Link href="/painel" className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold" onClick={toggleMenu}>
+                  <Link href="/painel" className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold" onClick={toggleMenu}>
                     Editar Perfil
                   </Link>
-                  <button onClick={handleLogout} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
+                  <button onClick={handleLogout} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
                     Sair
                   </button>
                 </>
               ) : (
                 <>
-                  <button onClick={openLoginModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                    Login
+                  <button onClick={openLoginModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
+                    <FaSignInAlt className="text-2xl" /> Login
                   </button>
-                  <button onClick={openRegisterModal} className="mb-4 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                    Cadastrar-se
+                  <button onClick={openRegisterModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
+                    <FaUserPlus className="text-2xl" /> Cadastrar-se
                   </button>
                 </>
               )}
-              <button onClick={openContatoModal} className="text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                Contato
+              <button onClick={openContatoModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
+                <FaEnvelope className="text-2xl" /> Contato
               </button>
               <p className="mt-4 text-sm text-[#F1E4A6]">Nosso Contato: (92) 99192-8559</p>
             </div>
