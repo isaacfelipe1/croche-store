@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaWhatsapp, FaHome, FaInfoCircle, FaSignInAlt, FaUserPlus, FaEnvelope } from 'react-icons/fa'; 
+import { FaWhatsapp, FaHome, FaInfoCircle, FaSignInAlt, FaUserPlus, FaEnvelope, FaHeart, FaUserEdit, FaSignOutAlt } from 'react-icons/fa'; 
 import SobreModal from './sobreModal';
 import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
@@ -230,59 +230,66 @@ const Navbar: React.FC = () => {
           }`}
         >
           {isOpen && (
-            <div className="flex flex-col items-start p-6 space-y-6">
-              <Link href="/" onClick={toggleMenu} className="flex items-center gap-2 mb-4 font-bold">
-                <FaHome className="text-4xl text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" />
-              </Link>
-              <button onClick={openSobreModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                <FaInfoCircle className="text-2xl" /> Sobre
-              </button>
-              {userEmail ? (
-                <>
-                  <span className="text-lg text-[#F1E4A6]">Olá, {userEmail}</span>
-                  {userRoles.includes('Admin') && (
-                    <div className="bg-[#5c3a2e] rounded w-full px-4 py-2 mb-4">
-                      <p className="text-sm font-bold text-[#F1E4A6] mb-2">Administração</p>
-                      <Link href="/admin" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
-                        Cadastrar Produtos
-                      </Link>
-                      <Link href="/listar" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
-                        Listar Produtos
-                      </Link>
-                      <Link href="/editar" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
-                        Editar Produtos
-                      </Link>
-                      <Link href="/excluir" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
-                        Excluir Produto
-                      </Link>
-                    </div>
-                  )}
-                  {!userRoles.includes('Admin') && (
-                    <button onClick={openWishlistModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                      Minha Lista de Desejos
+            <div className="flex flex-col items-start p-6 h-full">
+              <div className="flex-grow space-y-6">
+                <Link href="/" onClick={toggleMenu} className="flex items-center gap-2 mb-4 font-bold">
+                  <FaHome className="text-4xl text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" />
+                </Link>
+                <button onClick={openSobreModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
+                  <FaInfoCircle className="text-2xl" /> Sobre
+                </button>
+                {userEmail && (
+                  <>
+                    <span className="text-lg text-[#F1E4A6] mt-4 mb-2">Olá, {userEmail}</span>
+                    <hr className="border-t border-[#E56446] w-full" />
+                  </>
+                )}
+                {userEmail ? (
+                  <>
+                    {userRoles.includes('Admin') && (
+                      <div className="bg-[#5c3a2e] rounded w-full px-4 py-2 mb-4">
+                        <p className="text-sm font-bold text-[#F1E4A6] mb-2">Administração</p>
+                        <Link href="/admin" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
+                          Cadastrar Produtos
+                        </Link>
+                        <Link href="/listar" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
+                          Listar Produtos
+                        </Link>
+                        <Link href="/editar" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
+                          Editar Produtos
+                        </Link>
+                        <Link href="/excluir" className="block py-1 hover:bg-[#61B785] font-bold" onClick={toggleMenu}>
+                          Excluir Produto
+                        </Link>
+                      </div>
+                    )}
+                    {!userRoles.includes('Admin') && (
+                      <button onClick={openWishlistModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4">
+                        <FaHeart className="text-2xl" /> Minha Lista de Desejos
+                      </button>
+                    )}
+                    <Link href="/painel" className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4" onClick={toggleMenu}>
+                      <FaUserEdit className="text-2xl" /> Editar Perfil
+                    </Link>
+                    <button onClick={handleLogout} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4">
+                      <FaSignOutAlt className="text-2xl" /> Sair
                     </button>
-                  )}
-                  <Link href="/painel" className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold" onClick={toggleMenu}>
-                    Editar Perfil
-                  </Link>
-                  <button onClick={handleLogout} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                    Sair
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button onClick={openLoginModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                    <FaSignInAlt className="text-2xl" /> Login
-                  </button>
-                  <button onClick={openRegisterModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                    <FaUserPlus className="text-2xl" /> Cadastrar-se
-                  </button>
-                </>
-              )}
-              <button onClick={openContatoModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
-                <FaEnvelope className="text-2xl" /> Contato
-              </button>
-              <p className="mt-4 text-sm text-[#F1E4A6]">Nosso Contato: (92) 99192-8559</p>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={openLoginModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4">
+                      <FaSignInAlt className="text-2xl" /> Login
+                    </button>
+                    <button onClick={openRegisterModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4">
+                      <FaUserPlus className="text-2xl" /> Cadastrar-se
+                    </button>
+                  </>
+                )}
+                <button onClick={openContatoModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4">
+                  <FaEnvelope className="text-2xl" /> Contato
+                </button>
+              </div>
+              <p className="mt-auto text-sm text-[#F1E4A6]">Nosso Contato: (92) 99192-8559</p>
             </div>
           )}
         </div>
