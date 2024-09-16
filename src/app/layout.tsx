@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Footer from '../app/components/footer';
 import Navbar from '../app/components/navbar'; 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -48,6 +49,19 @@ export default function RootLayout({
         {/* Meta tag de verificação do Google */}
         <meta name="google-site-verification" content="AVrxxVnnTxjRMLjb33XhOwBh-ig3hG6XRFs0FcOA9zk" />
         <link rel="icon" href="https://croche-store1.s3.us-east-2.amazonaws.com/NovaLogoAmorECroche.png" />
+
+        {/* Google Analytics */}
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=G-RKLDDZR4WL`}></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-RKLDDZR4WL');
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.className} flex flex-col min-h-screen`}>
         <Navbar />
