@@ -89,6 +89,23 @@ const ProductsList: React.FC = () => {
     setFilteredProducts(filtered)
   }, [selectedCategory, searchTerm, products])
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
+      ) {
+        setVisibleCount((prevCount) => prevCount + 6)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   const toggleFavorite = (productId: number) => {
     if (!isLoggedIn) {
       setAlertMessage('Você precisa estar logado para favoritar um produto.')
@@ -124,10 +141,6 @@ const ProductsList: React.FC = () => {
 
     setPurchaseFeedback('Redirecionando para o WhatsApp...')
     setTimeout(() => setPurchaseFeedback(null), 3000)
-  }
-
-  const handleShowMore = () => {
-    setVisibleCount((prevCount) => prevCount + 6)
   }
 
   const openImageModal = (imageUrl: string, altText: string) => {
@@ -186,7 +199,6 @@ const ProductsList: React.FC = () => {
         </div>
 
         <div className="w-full md:w-3/4">
-          {/* Verifica se existem produtos filtrados */}
           {filteredProducts.length > 0 ? (
             <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredProducts.slice(0, visibleCount).map((product) => (
@@ -255,7 +267,6 @@ const ProductsList: React.FC = () => {
                           </button>
                         )}
                       
-                      {/* Mostrar quantidade e outros textos somente se não for "Feito por encomenda" */}
                       {product.description.trim() !== 'Feito por encomenda' && (
                         <>
                           <p className="text-sm text-[#432721] mb-2 font-bold">
@@ -273,7 +284,6 @@ const ProductsList: React.FC = () => {
                               Em estoque
                             </p>
                           )}
-                          {/* Mostrar botão "Comprar" */}
                           <button
                             onClick={() => handleWhatsappRedirect(product)}
                             className="w-full py-2 px-4 bg-[#E56446] text-white rounded hover:bg-[#432721] transition-colors duration-200 flex items-center justify-center"
@@ -288,18 +298,7 @@ const ProductsList: React.FC = () => {
               ))}
             </ul>
           ) : (
-            // Exibir mensagem quando nenhum produto for encontrado
             <p className="text-center text-red-500">Nenhum produto encontrado com o nome informado.</p>
-          )}
-          {filteredProducts.length > visibleCount && (
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={handleShowMore}
-                className="py-2 px-4 bg-[#432721] text-white rounded hover:bg-[#E56446] transition-colors duration-200"
-              >
-                Ver mais
-              </button>
-            </div>
           )}
         </div>
       </div>
