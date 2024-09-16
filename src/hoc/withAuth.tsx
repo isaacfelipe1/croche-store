@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { parseCookies } from 'nookies'; // Importando nookies para gerenciar cookies
+import { parseCookies } from 'nookies'; 
 
 const withAuth = (WrappedComponent: React.FC) => {
   const AuthenticatedComponent: React.FC = (props) => {
@@ -8,20 +8,18 @@ const withAuth = (WrappedComponent: React.FC) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-      const cookies = parseCookies(); // Recuperando os cookies
-      const token = cookies.token; // Obtendo o token dos cookies
+      const cookies = parseCookies(); 
+      const token = cookies.token; 
 
       if (!token) {
-        // Se o token não existir, redireciona para a página inicial (ou página de login)
         router.push('/');
       } else {
-        // Caso o token exista, considera que o usuário está autenticado
         setIsLoading(false);
       }
     }, [router]);
 
     if (isLoading) {
-      return null; // Ou você pode retornar um spinner/carregando aqui
+      return null; 
     }
 
     return <WrappedComponent {...props} />;
