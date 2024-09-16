@@ -35,12 +35,16 @@ const EditProductPage: React.FC = () => {
           return;
         }
 
+        console.log(`Fetching product data for ID: ${id}`);
+        
         const response = await axios.get(`https://crochetstoreapi.onrender.com/api/Products/${id.trim()}`, {
           headers: {
             Authorization: `Bearer ${token}`, 
           },
         });
         const productData = response.data;
+        console.log('Product data fetched successfully:', productData);
+
         setProduct({
           id: productData.id,
           name: productData.name,
@@ -60,11 +64,15 @@ const EditProductPage: React.FC = () => {
   );
 
   useEffect(() => {
-    if (product.id) fetchProductData(product.id);
+    if (product.id) {
+      console.log('Fetching product data with ID:', product.id);
+      fetchProductData(product.id);
+    }
   }, [product.id, fetchProductData]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
+    console.log(`Changing product field: ${name} to ${value}`);
     setProduct((prevProduct) => ({
       ...prevProduct,
       [name]: value,
@@ -72,13 +80,19 @@ const EditProductPage: React.FC = () => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImageFile(e.target.files ? e.target.files[0] : null);
+    const file = e.target.files ? e.target.files[0] : null;
+    console.log('Selected file:', file);
+    setImageFile(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!product.id.trim()) {
+    const productId = String(product.id).trim(); // Garantir que o ID seja uma string
+
+    console.log('Submitting product update for ID:', productId);
+
+    if (!productId) {
       alert('ID do produto é obrigatório.');
       return;
     }
@@ -113,8 +127,10 @@ const EditProductPage: React.FC = () => {
         formData.append('imageFile', imageFile);
       }
 
+      console.log('Sending PUT request to update product:', formData);
+
       const response = await axios.put(
-        `https://crochetstoreapi.onrender.com/api/Products/${product.id.trim()}`, 
+        `https://crochetstoreapi.onrender.com/api/Products/${productId}`, 
         formData,
         {
           headers: {
@@ -125,6 +141,7 @@ const EditProductPage: React.FC = () => {
       );
 
       if (response.status === 204) {
+        console.log('Product updated successfully.');
         alert('Produto atualizado com sucesso!');
         router.push('/listar'); 
       }
