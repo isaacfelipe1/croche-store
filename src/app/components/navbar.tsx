@@ -235,7 +235,7 @@ const Navbar: React.FC = () => {
                 <Link href="/" onClick={toggleMenu} className="flex items-center gap-2 mb-4 font-bold">
                   <FaHome className="text-4xl text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" />
                 </Link>
-                <button onClick={openSobreModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mb-4">
+                <button onClick={openSobreModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mb-6">
                   <FaInfoCircle className="text-2xl" /> Sobre
                 </button>
                 {userEmail && (
