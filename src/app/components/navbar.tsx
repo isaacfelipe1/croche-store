@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import {
   FaWhatsapp,
@@ -29,6 +29,7 @@ const Navbar: React.FC = () => {
   const [isWishlistModalOpen, setIsWishlistModalOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [userRoles, setUserRoles] = useState<string[]>([]);
+  const menuRef = useRef<HTMLDivElement>(null); // Cria a referência para o menu
 
   const decodeToken = (token: string): { email: string; roles: string[] } | null => {
     try {
@@ -111,12 +112,20 @@ const Navbar: React.FC = () => {
       setUserRoles([]);
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('accountDeleted', handleAccountDeleted);
+    document.addEventListener('mousedown', handleClickOutside);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('accountDeleted', handleAccountDeleted);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
@@ -261,10 +270,11 @@ const Navbar: React.FC = () => {
 
         {/* Menu mobile */}
         <div
+          ref={menuRef} // Referência ao menu mobile
           className={`fixed top-0 right-0 h-full w-64 bg-[#432721] text-[#F1E4A6] z-50 transform lg:hidden transition-transform duration-300 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
-          style={{ height: '100vh', overflowY: 'auto' }} // Ensures the menu occupies full height and allows scrolling
+          style={{ height: '100vh', overflowY: 'auto' }} // Assegura que o menu ocupe a altura total e permita rolagem
         >
           {isOpen && (
             <div className="flex flex-col items-start p-6 h-full">
