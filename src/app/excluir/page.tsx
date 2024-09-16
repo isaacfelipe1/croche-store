@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import withAuth from '../../hoc/withAuth';
-import { parseCookies } from 'nookies'; // Importando nookies para gerenciar cookies
+import { parseCookies } from 'nookies'; 
 
 const DeleteProductPage: React.FC = () => {
   const [productId, setProductId] = useState<string>('');
@@ -20,8 +20,8 @@ const DeleteProductPage: React.FC = () => {
     if (confirm('Tem certeza que deseja excluir este produto?')) {
       setIsLoading(true);
       try {
-        const cookies = parseCookies(); // Obtendo os cookies
-        const token = cookies.token; // Obtendo o token dos cookies
+        const cookies = parseCookies(); 
+        const token = cookies.token; 
 
         if (!token) {
           alert('Você precisa estar logado para excluir o produto.');
@@ -30,13 +30,13 @@ const DeleteProductPage: React.FC = () => {
 
         const response = await axios.delete(`https://crochetstoreapi.onrender.com/api/Products/${productId}`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Usando o token dos cookies
+            Authorization: `Bearer ${token}`, 
           },
         });
 
         if (response.status === 204) {
           alert('Produto excluído com sucesso!');
-          router.push('/listar'); // Redireciona para a lista de produtos
+          router.push('/listar');
         } else {
           console.error('Erro ao excluir o produto: Resposta inesperada', response);
           alert('Falha ao excluir o produto. Verifique suas permissões.');
@@ -77,4 +77,4 @@ const DeleteProductPage: React.FC = () => {
   );
 };
 
-export default withAuth(DeleteProductPage); // Envolva o componente com withAuth para proteger a rota
+export default withAuth(DeleteProductPage); 

@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import withAuth from '../../hoc/withAuth'; 
-import debounce from 'lodash/debounce'; // Importa o debounce do lodash
-import { parseCookies } from 'nookies'; // Importa nookies para gerenciar cookies
+import debounce from 'lodash/debounce'; 
+import { parseCookies } from 'nookies'; 
 
 const EditProductPage: React.FC = () => {
   const [productId, setProductId] = useState(''); 
@@ -24,8 +24,8 @@ const EditProductPage: React.FC = () => {
     debounce(async (id: string) => {
       if (id.trim()) {
         try {
-          const cookies = parseCookies(); // Obtendo os cookies
-          const token = cookies.token; // Obtendo o token dos cookies
+          const cookies = parseCookies(); 
+          const token = cookies.token; 
 
           if (!token) {
             alert('Você precisa estar logado para buscar dados do produto.');
@@ -34,7 +34,7 @@ const EditProductPage: React.FC = () => {
 
           const response = await axios.get(`https://crochetstoreapi.onrender.com/api/Products/${id.trim()}`, {
             headers: {
-              Authorization: `Bearer ${token}`, // Usando o token dos cookies
+              Authorization: `Bearer ${token}`, 
             },
           });
           const product = response.data;
@@ -44,7 +44,7 @@ const EditProductPage: React.FC = () => {
           setCategory(product.category);
           setColor(product.color);
           setSize(product.size);
-          setImageFile(null); // Reset the image file since the original URL is not available
+          setImageFile(null); 
           setStockQuantity(product.stockQuantity.toString());
         } catch (error) {
           console.error('Erro ao buscar dados do produto:', error);
@@ -80,15 +80,15 @@ const EditProductPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const cookies = parseCookies(); // Obtendo os cookies
-      const token = cookies.token; // Obtendo o token dos cookies
+      const cookies = parseCookies();
+      const token = cookies.token; 
 
       if (!token) {
         alert('Você precisa estar logado para atualizar o produto.');
         return;
       }
 
-      // Cria um objeto FormData para enviar os dados como formulário
+  
       const formData = new FormData();
       formData.append('id', productId.trim());
       formData.append('name', name);
@@ -98,8 +98,6 @@ const EditProductPage: React.FC = () => {
       formData.append('color', color);
       formData.append('size', size);
       formData.append('stockQuantity', stockQuantity);
-
-      // Adiciona o arquivo de imagem ao FormData se estiver presente
       if (imageFile) {
         formData.append('imageFile', imageFile);
       }
@@ -109,8 +107,8 @@ const EditProductPage: React.FC = () => {
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Usando o token dos cookies
-            'Content-Type': 'multipart/form-data', // Define o tipo de conteúdo correto
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'multipart/form-data', 
           },
         }
       );

@@ -1,10 +1,10 @@
-// src/app/listar/page.tsx
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
-import withAuth from '../../hoc/withAuth'; // Importando o HOC de autenticação
+import withAuth from '../../hoc/withAuth'; 
 
 const ProductsListPage: React.FC = () => {
   const [products, setProducts] = useState([]);

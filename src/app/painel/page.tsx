@@ -24,13 +24,13 @@ const EditProfile: React.FC = () => {
 
   useEffect(() => {
     const cookies = parseCookies();
-    const token = cookies.token; // Obtendo o token dos cookies
-    const storedUserId = cookies.userId; // Obtendo o userId dos cookies
+    const token = cookies.token;
+    const storedUserId = cookies.userId; 
 
     if (storedUserId && token) {
       setUserId(storedUserId);
     } else {
-      // Se não estiver autenticado, redireciona para a página de login
+     
       router.push('/login');
     }
   }, [router]);
