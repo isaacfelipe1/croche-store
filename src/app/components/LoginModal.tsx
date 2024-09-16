@@ -21,6 +21,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
   const [isEmailValid, setIsEmailValid] = useState(true); 
   const [theme, setTheme] = useState('light'); 
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); 
+  const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false); 
+  const [forgotPasswordMessage, setForgotPasswordMessage] = useState(''); // Mensagem para recuperação de senha
 
   const decodeToken = (token: string): { email: string; roles: string[] } | null => {
     try {
@@ -42,7 +44,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
       
       return { email, roles };
     } catch (error) {
-      // console.error('Erro ao decodificar o token:', error);
       return null;
     }
   };
@@ -66,11 +67,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
       }
 
       const { token, userId } = await response.json(); 
-      // console.log('Login bem-sucedido, token e userId recebidos:', token, userId);
 
-      // Armazenando token e userId em cookies
       setCookie(null, 'token', token, {
-        maxAge: 30 * 24 * 60 * 60, // 30 dias
+        maxAge: 30 * 24 * 60 * 60,
         path: '/',
       });
 
@@ -86,8 +85,32 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
         throw new Error('Falha ao decodificar o token.');
       }
     } catch (err) {
-      // console.error('Erro ao fazer login:', err);
       setError('Credenciais inválidas. Por favor, tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    setForgotPasswordMessage('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('https://crochetstoreapi.onrender.com/Auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Falha ao enviar solicitação de recuperação de senha');
+      }
+
+      setForgotPasswordMessage('Verifique seu email para redefinir sua senha.');
+    } catch (err) {
+      setForgotPasswordMessage('Falha ao enviar solicitação de recuperação de senha. Por favor, tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -118,6 +141,14 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
 
   const handleCloseRegisterModal = () => {
     setIsRegisterModalOpen(false);
+  };
+
+  const handleOpenForgotPasswordModal = () => {
+    setIsForgotPasswordModalOpen(true);
+  };
+
+  const handleCloseForgotPasswordModal = () => {
+    setIsForgotPasswordModalOpen(false);
   };
 
   const handleRegisterSuccess = (token: string, userId: string) => {
@@ -196,6 +227,11 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
           <button onClick={toggleTheme} className="mt-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center justify-center">
             {theme === 'dark' ? <FaSun size={20} /> : <FaMoon size={20} />}
           </button>
+          <p className="mt-4 text-center text-gray-600 dark:text-gray-300">Esqueceu sua senha? 
+            <button onClick={handleOpenForgotPasswordModal} className="text-[#734230] dark:text-white font-semibold hover:underline ml-1">
+              Recuperar senha
+            </button>
+          </p>
           <p className="mt-4 text-center text-gray-600 dark:text-gray-300">Não está cadastrado? 
             <button onClick={handleOpenRegisterModal} className="text-[#734230] dark:text-white font-semibold hover:underline ml-1">
               Cadastre-se
@@ -209,6 +245,33 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
         onClose={handleCloseRegisterModal}
         onRegisterSuccess={handleRegisterSuccess} 
       />
+
+      {/* Modal de recuperação de senha */}
+      {isForgotPasswordModalOpen && (
+        <Modal isOpen={isForgotPasswordModalOpen} onClose={handleCloseForgotPasswordModal}>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md mx-auto animate-slideIn">
+            <h2 className="text-2xl font-semibold text-center mb-6 text-[#734230] dark:text-white">Recuperar Senha</h2>
+            <p className="text-center text-gray-600 dark:text-gray-300 mb-4">Por favor, insira seu email para receber um link de recuperação de senha.</p>
+            <input 
+              type="email" 
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#61B785] transition mb-4"
+              placeholder="Digite seu email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {forgotPasswordMessage && (
+              <p className="text-center text-green-500">{forgotPasswordMessage}</p>
+            )}
+            <button 
+              className="w-full bg-[#61B785] text-white py-3 rounded-lg font-semibold hover:bg-[#734230] transition-colors duration-200 shadow-md hover:shadow-lg"
+              onClick={handleForgotPassword}
+              disabled={isLoading}
+            >
+              {isLoading ? <FaSpinner className="animate-spin" /> : 'Enviar'}
+            </button>
+          </div>
+        </Modal>
+      )}
     </>
   );
 };
