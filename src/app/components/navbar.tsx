@@ -235,12 +235,12 @@ const Navbar: React.FC = () => {
                 <Link href="/" onClick={toggleMenu} className="flex items-center gap-2 mb-4 font-bold">
                   <FaHome className="text-4xl text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300" />
                 </Link>
-                <button onClick={openSobreModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold">
+                <button onClick={openSobreModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mb-4">
                   <FaInfoCircle className="text-2xl" /> Sobre
                 </button>
                 {userEmail && (
                   <>
-                    <span className="text-lg text-[#F1E4A6] mt-4 mb-2">Olá, {userEmail}</span>
+                    <span className="text-lg text-[#F1E4A6] mb-2">Olá, {userEmail}</span>
                     <hr className="border-t border-[#E56446] w-full" />
                   </>
                 )}
@@ -264,14 +264,14 @@ const Navbar: React.FC = () => {
                       </div>
                     )}
                     {!userRoles.includes('Admin') && (
-                      <button onClick={openWishlistModal} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4">
-                        <FaHeart className="text-2xl" /> Minha Lista de Desejos
+                      <button onClick={openWishlistModal} className="flex items-center gap-0.5 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4">
+                        <FaHeart className="text-xl" /> Minha Lista de Desejos
                       </button>
                     )}
-                    <Link href="/painel" className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4" onClick={toggleMenu}>
+                    <Link href="/painel" className="flex items-center gap-1 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4" onClick={toggleMenu}>
                       <FaUserEdit className="text-2xl" /> Editar Perfil
                     </Link>
-                    <button onClick={handleLogout} className="flex items-center gap-2 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4">
+                    <button onClick={handleLogout} className="flex items-center gap-1 text-lg hover:text-[#61B785] transition-colors duration-300 font-bold mt-4">
                       <FaSignOutAlt className="text-2xl" /> Sair
                     </button>
                   </>
