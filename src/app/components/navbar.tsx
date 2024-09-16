@@ -264,7 +264,7 @@ const Navbar: React.FC = () => {
           className={`fixed top-0 right-0 h-full w-64 bg-[#432721] text-[#F1E4A6] z-50 transform lg:hidden transition-transform duration-300 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
-          style={{ top: '0', overflowY: 'auto' }} // Fix the menu at the top and allow scrolling within it
+          style={{ height: '100vh', overflowY: 'auto' }} // Ensures the menu occupies full height and allows scrolling
         >
           {isOpen && (
             <div className="flex flex-col items-start p-6 h-full">
