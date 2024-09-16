@@ -2,7 +2,17 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { FaWhatsapp, FaHome, FaInfoCircle, FaSignInAlt, FaUserPlus, FaEnvelope, FaHeart, FaUserEdit, FaSignOutAlt } from 'react-icons/fa'; 
+import {
+  FaWhatsapp,
+  FaHome,
+  FaInfoCircle,
+  FaSignInAlt,
+  FaUserPlus,
+  FaEnvelope,
+  FaHeart,
+  FaUserEdit,
+  FaSignOutAlt,
+} from 'react-icons/fa';
 import SobreModal from './sobreModal';
 import ContatoModal from './contatoModal';
 import LoginModal from './LoginModal';
@@ -51,6 +61,7 @@ const Navbar: React.FC = () => {
     setUserEmail(null);
     setUserRoles([]);
     setIsOpen(false);
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
     console.log('Usuário deslogado, cookies removidos.');
     window.dispatchEvent(new Event('storage'));
   };
@@ -112,34 +123,72 @@ const Navbar: React.FC = () => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+    document.body.style.overflow = isOpen ? 'auto' : 'hidden'; // Disable scrolling when menu is open
+  };
+
+  const closeAllModals = () => {
+    setIsSobreModalOpen(false);
+    setIsContatoModalOpen(false);
+    setIsLoginModalOpen(false);
+    setIsRegisterModalOpen(false);
+    setIsWishlistModalOpen(false);
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
   };
 
   const openSobreModal = () => {
     setIsSobreModalOpen(true);
     setIsOpen(false);
+    document.body.style.overflow = 'hidden'; // Disable scrolling when modal is open
   };
 
-  const closeSobreModal = () => setIsSobreModalOpen(false);
+  const closeSobreModal = () => {
+    setIsSobreModalOpen(false);
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
+  };
+
   const openContatoModal = () => {
     setIsContatoModalOpen(true);
     setIsOpen(false);
+    document.body.style.overflow = 'hidden'; // Disable scrolling when modal is open
   };
-  const closeContatoModal = () => setIsContatoModalOpen(false);
+
+  const closeContatoModal = () => {
+    setIsContatoModalOpen(false);
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
+  };
+
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
     setIsOpen(false);
+    document.body.style.overflow = 'hidden'; // Disable scrolling when modal is open
   };
-  const closeLoginModal = () => setIsLoginModalOpen(false);
+
+  const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
+  };
+
   const openRegisterModal = () => {
     setIsRegisterModalOpen(true);
     setIsOpen(false);
+    document.body.style.overflow = 'hidden'; // Disable scrolling when modal is open
   };
-  const closeRegisterModal = () => setIsRegisterModalOpen(false);
+
+  const closeRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
+  };
+
   const openWishlistModal = () => {
     setIsWishlistModalOpen(true);
     setIsOpen(false);
+    document.body.style.overflow = 'hidden'; // Disable scrolling when modal is open
   };
-  const closeWishlistModal = () => setIsWishlistModalOpen(false);
+
+  const closeWishlistModal = () => {
+    setIsWishlistModalOpen(false);
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
+  };
 
   return (
     <>

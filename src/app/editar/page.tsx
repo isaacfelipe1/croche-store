@@ -8,71 +8,87 @@ import debounce from 'lodash/debounce';
 import { parseCookies } from 'nookies'; 
 
 const EditProductPage: React.FC = () => {
-  const [productId, setProductId] = useState(''); 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [color, setColor] = useState('');
-  const [size, setSize] = useState('');
+  const [product, setProduct] = useState({
+    id: '',
+    name: '',
+    description: '',
+    price: '',
+    category: '',
+    color: '',
+    size: '',
+    stockQuantity: '',
+  });
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [stockQuantity, setStockQuantity] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const fetchProductData = useCallback(
     debounce(async (id: string) => {
-      if (id.trim()) {
-        try {
-          const cookies = parseCookies(); 
-          const token = cookies.token; 
+      if (!id.trim()) return;
 
-          if (!token) {
-            alert('Você precisa estar logado para buscar dados do produto.');
-            return;
-          }
+      try {
+        const cookies = parseCookies(); 
+        const token = cookies.token; 
 
-          const response = await axios.get(`https://crochetstoreapi.onrender.com/api/Products/${id.trim()}`, {
-            headers: {
-              Authorization: `Bearer ${token}`, 
-            },
-          });
-          const product = response.data;
-          setName(product.name);
-          setDescription(product.description);
-          setPrice(product.price.toString());
-          setCategory(product.category);
-          setColor(product.color);
-          setSize(product.size);
-          setImageFile(null); 
-          setStockQuantity(product.stockQuantity.toString());
-        } catch (error) {
-          console.error('Erro ao buscar dados do produto:', error);
-          alert('Produto não encontrado. Verifique o ID inserido.');
+        if (!token) {
+          alert('Você precisa estar logado para buscar dados do produto.');
+          return;
         }
+
+        const response = await axios.get(`https://crochetstoreapi.onrender.com/api/Products/${id.trim()}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, 
+          },
+        });
+        const productData = response.data;
+        setProduct({
+          id: productData.id,
+          name: productData.name,
+          description: productData.description,
+          price: productData.price.toString(),
+          category: productData.category,
+          color: productData.color,
+          size: productData.size,
+          stockQuantity: productData.stockQuantity.toString(),
+        });
+      } catch (error) {
+        console.error('Erro ao buscar dados do produto:', error);
+        alert('Produto não encontrado. Verifique o ID inserido.');
       }
-    }, 500), 
+    }, 500),
     []
   );
 
   useEffect(() => {
-    fetchProductData(productId);
-  }, [productId, fetchProductData]);
+    if (product.id) fetchProductData(product.id);
+  }, [product.id, fetchProductData]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      [name]: value,
+    }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImageFile(e.target.files ? e.target.files[0] : null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!productId.trim()) {
+    if (!product.id.trim()) {
       alert('ID do produto é obrigatório.');
       return;
     }
 
-    if (parseFloat(price) <= 0) {
+    if (parseFloat(product.price) <= 0) {
       alert('O preço deve ser um valor positivo.');
       return;
     }
 
-    if (parseInt(stockQuantity, 10) < 0) {
+    if (parseInt(product.stockQuantity, 10) < 0) {
       alert('A quantidade em estoque não pode ser negativa.');
       return;
     }
@@ -88,22 +104,17 @@ const EditProductPage: React.FC = () => {
         return;
       }
 
-  
       const formData = new FormData();
-      formData.append('id', productId.trim());
-      formData.append('name', name);
-      formData.append('description', description);
-      formData.append('price', parseFloat(price).toString());
-      formData.append('category', category);
-      formData.append('color', color);
-      formData.append('size', size);
-      formData.append('stockQuantity', stockQuantity);
+      Object.keys(product).forEach((key) => {
+        formData.append(key, product[key as keyof typeof product]);
+      });
+
       if (imageFile) {
         formData.append('imageFile', imageFile);
       }
 
       const response = await axios.put(
-        `https://crochetstoreapi.onrender.com/api/Products/${productId.trim()}`, 
+        `https://crochetstoreapi.onrender.com/api/Products/${product.id.trim()}`, 
         formData,
         {
           headers: {
@@ -131,70 +142,78 @@ const EditProductPage: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
+          name="id"
           placeholder="ID do Produto"
-          value={productId}
-          onChange={(e) => setProductId(e.target.value)}
+          value={product.id}
+          onChange={handleInputChange}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
           required
         />
         <input
           type="text"
+          name="name"
           placeholder="Nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={product.name}
+          onChange={handleInputChange}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
           required
         />
         <textarea
+          name="description"
           placeholder="Descrição"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={product.description}
+          onChange={handleInputChange}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] resize-none dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
           rows={4}
           required
         />
         <input
           type="number"
+          name="price"
           placeholder="Preço"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
+          value={product.price}
+          onChange={handleInputChange}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
           required
           min="0"
         />
         <input
           type="text"
+          name="category"
           placeholder="Categoria"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={product.category}
+          onChange={handleInputChange}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
         />
         <input
           type="text"
+          name="color"
           placeholder="Cor"
-          value={color}
-          onChange={(e) => setColor(e.target.value)}
+          value={product.color}
+          onChange={handleInputChange}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
           required
         />
         <input
           type="text"
+          name="size"
           placeholder="Tamanho"
-          value={size}
-          onChange={(e) => setSize(e.target.value)}
+          value={product.size}
+          onChange={handleInputChange}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
           required
         />
         <input
           type="file"
-          onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
+          onChange={handleFileChange}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
         />
         <input
           type="number"
+          name="stockQuantity"
           placeholder="Quantidade em Estoque"
-          value={stockQuantity}
-          onChange={(e) => setStockQuantity(e.target.value)}
+          value={product.stockQuantity}
+          onChange={handleInputChange}
           className="w-full p-3 border border-[#61B785] rounded-md focus:outline-none focus:ring-2 focus:ring-[#61B785] dark:bg-[#1A1A1A] dark:text-[#F5F5F5]"
           required
           min="0"
