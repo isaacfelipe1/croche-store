@@ -22,7 +22,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
   const [theme, setTheme] = useState('light'); 
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); 
   const [isForgotPasswordModalOpen, setIsForgotPasswordModalOpen] = useState(false); 
-  const [forgotPasswordMessage, setForgotPasswordMessage] = useState(''); // Mensagem para recuperação de senha
+  const [forgotPasswordMessage, setForgotPasswordMessage] = useState(''); 
 
   const decodeToken = (token: string): { email: string; roles: string[] } | null => {
     try {
