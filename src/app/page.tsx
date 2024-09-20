@@ -243,22 +243,30 @@ const ProductsList: React.FC = () => {
                           })}
                         </span>
                       </p>
-                      
+
                       {typeof product.description === 'string' &&
-                        product.description.trim() === 'Feito por encomenda' && (
+                        product.description.trim() ===
+                          'Feito por encomenda' && (
                           <p className="text-sm text-[#432721] mb-2 font-bold">
                             {product.description}
                           </p>
                         )}
 
                       <p className="text-sm text-[#432721] mb-2 font-bold">
-                        Cor: <span className="font-medium">{product.color}</span>
+                        Cor:{' '}
+                        <span className="font-medium">{product.color}</span>
+                      </p>
+                      <p className="text-sm text-[#432721] mb-2 font-bold">
+                        Tamanho:{' '}
+                        <span className="font-medium">{product.size}</span>{' '}
+                        {/* Exibição do tamanho */}
                       </p>
                     </div>
 
                     <div className="mt-auto">
                       {typeof product.description === 'string' &&
-                        product.description.trim() === 'Feito por encomenda' && (
+                        product.description.trim() ===
+                          'Feito por encomenda' && (
                           <button
                             onClick={() => handleWhatsappRedirect(product)}
                             className="w-full py-2 px-4 bg-[#61B785] text-white rounded hover:bg-[#734230] transition-colors duration-200"
@@ -266,7 +274,7 @@ const ProductsList: React.FC = () => {
                             Encomendar
                           </button>
                         )}
-                      
+
                       {product.description.trim() !== 'Feito por encomenda' && (
                         <>
                           <p className="text-sm text-[#432721] mb-2 font-bold">
@@ -298,7 +306,9 @@ const ProductsList: React.FC = () => {
               ))}
             </ul>
           ) : (
-            <p className="text-center text-red-500">Nenhum produto encontrado com o nome informado.</p>
+            <p className="text-center text-red-500">
+              Nenhum produto encontrado com o nome informado.
+            </p>
           )}
         </div>
       </div>
