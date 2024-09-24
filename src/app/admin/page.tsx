@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import withAuth from '../../hoc/withAuth';
-import { parseCookies } from 'nookies'; // Importando nookies
+import { parseCookies } from 'nookies'; 
 
 const CreateProductPage: React.FC = () => {
   const [name, setName] = useState('');
@@ -49,7 +49,6 @@ const CreateProductPage: React.FC = () => {
         formData.append('ImageFile', imageFile);
       }
 
-      // Obtendo o token do cookie usando nookies
       const cookies = parseCookies();
       const token = cookies.token;
 

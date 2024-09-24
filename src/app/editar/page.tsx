@@ -88,7 +88,7 @@ const EditProductPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const productId = String(product.id).trim(); // Garantir que o ID seja uma string
+    const productId = String(product.id).trim(); 
 
     console.log('Submitting product update for ID:', productId);
 
