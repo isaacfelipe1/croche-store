@@ -22,7 +22,7 @@ const FavoriteButton: React.FC<FavoriteButtonProps> = ({ isFavorite, onClick, to
       className="absolute top-2 right-2 text-[#E56446] hover:text-[#432721] transition-colors duration-200"
       onClick={handleFavoriteClick}
     >
-      {isFavorite ? <FaHeart size={24} /> : <FaRegHeart size={24} />}
+      {isFavorite ? <FaHeart size={30} /> : <FaRegHeart size={30} />}
     </button>
   );
 };
