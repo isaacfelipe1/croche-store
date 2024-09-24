@@ -29,7 +29,6 @@ const ProductsList: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null)
   const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null)
   const [favoriteProducts, setFavoriteProducts] = useState<number[]>([])
-
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false)
   const [modalMessage, setModalMessage] = useState<string | null>(null)
 

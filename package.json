@@ -15,14 +15,15 @@
     "axios": "^1.7.7",
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
-    "next": "14.2.7",
+    "next": "^14.2.13",
     "next-auth": "^4.24.7",
     "next-sitemap": "^4.2.3",
     "nookies": "^2.5.2",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.3.0",
-    "react-query": "^3.39.3"
+    "react-query": "^3.39.3",
+    "react-zoom-pan-pinch": "^3.6.1"
   },
   "devDependencies": {
     "@types/jwt-decode": "^3.1.0",
