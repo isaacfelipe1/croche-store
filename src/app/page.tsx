@@ -13,7 +13,7 @@ import ImageModal from '../app/components/imageModal'
 import Alert from '../app/components/alert'
 import { parseCookies } from 'nookies'
 import Image from 'next/image'
-
+import LoginRequiredModal from '../app/components/LoginRequiredModal'
 const ProductsList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
@@ -31,6 +31,9 @@ const ProductsList: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null)
   const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null)
   const [favoriteProducts, setFavoriteProducts] = useState<number[]>([])
+
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false)
+  const [modalMessage, setModalMessage] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -108,7 +111,8 @@ const ProductsList: React.FC = () => {
 
   const toggleFavorite = (productId: number) => {
     if (!isLoggedIn) {
-      setAlertMessage('Você precisa estar logado para favoritar um produto.')
+      setModalMessage('Você precisa estar logado para favoritar um produto.')
+      setIsLoginModalOpen(true)
       return
     }
 
@@ -121,22 +125,23 @@ const ProductsList: React.FC = () => {
   }
 
   const handleWhatsappRedirect = (product: Product) => {
-    const cookies = parseCookies()
-    const token = cookies.token
+    const token = parseCookies().token
 
     if (!token) {
-      setAlertMessage('Você precisa estar logado para realizar a compra.')
+      setModalMessage('Você precisa estar logado para realizar a compra.')
+      setIsLoginModalOpen(true)
       return
     }
 
     const phoneNumber = '5592991928559'
     const message = `Olá!\nEstou interessado em comprar o produto: *${product.name}*\nCor: _${product.color}_\nPreço: *R$${product.price.toLocaleString(
       'pt-BR',
-      { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
     )}*\nO produto é este: ${product.imageUrl}`
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      message,
-    )}`
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappURL, '_blank')
 
     setPurchaseFeedback('Redirecionando para o WhatsApp...')
@@ -168,6 +173,13 @@ const ProductsList: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {isLoginModalOpen && modalMessage && (
+        <LoginRequiredModal
+          message={modalMessage}
+          onClose={() => setIsLoginModalOpen(false)}
+        />
+      )}
+
       {alertMessage && (
         <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />
       )}
@@ -259,7 +271,6 @@ const ProductsList: React.FC = () => {
                       <p className="text-sm text-[#432721] mb-2 font-bold">
                         Tamanho:{' '}
                         <span className="font-medium">{product.size}</span>{' '}
-                        {/* Exibição do tamanho */}
                       </p>
                     </div>
 
