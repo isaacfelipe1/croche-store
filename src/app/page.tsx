@@ -1,6 +1,7 @@
 'use client'
+
 import React, { useEffect, useState, memo } from 'react'
-import { FaWhatsapp, FaHeart, FaRegHeart, FaSpinner } from 'react-icons/fa'
+import { FaWhatsapp, FaSpinner } from 'react-icons/fa'
 import { getProducts, Product } from '../app/api'
 import CategoryFilter from '../app/components/categoryFilter'
 import ImageModal from '../app/components/imageModal'
@@ -9,6 +10,7 @@ import { parseCookies } from 'nookies'
 import Image from 'next/image'
 import LoginRequiredModal from '../app/components/LoginRequiredModal'
 import SearchInput from '../app/components/SearchInput'
+import FavoriteButton from './components/FavoriteButton'
 
 const ProductsList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([])
@@ -106,18 +108,17 @@ const ProductsList: React.FC = () => {
   }, [])
 
   const toggleFavorite = (productId: number) => {
-    if (!isLoggedIn) {
-      setModalMessage('Você precisa estar logado para favoritar um produto.')
-      setIsLoginModalOpen(true)
-      return
-    }
-
     const updatedFavorites = favoriteProducts.includes(productId)
       ? favoriteProducts.filter((id) => id !== productId)
       : [...favoriteProducts, productId]
 
     setFavoriteProducts(updatedFavorites)
     localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites))
+  }
+
+  const handleLoginRequired = () => {
+    setModalMessage('Você precisa estar logado para favoritar um produto.')
+    setIsLoginModalOpen(true)
   }
 
   const handleWhatsappRedirect = (product: Product) => {
@@ -167,6 +168,7 @@ const ProductsList: React.FC = () => {
     )
   if (error) return <p className="text-center text-red-500 mt-4">{error}</p>
 
+  const token = parseCookies().token; 
   return (
     <div className="container mx-auto px-4 py-8">
       {isLoginModalOpen && modalMessage && (
@@ -219,16 +221,12 @@ const ProductsList: React.FC = () => {
                         openImageModal(product.imageUrl, product.name)
                       }
                     />
-                    <button
-                      className="absolute top-2 right-2 text-[#E56446] hover:text-[#432721] transition-colors duration-200"
+                    <FavoriteButton
+                      isFavorite={favoriteProducts.includes(product.id)}
                       onClick={() => toggleFavorite(product.id)}
-                    >
-                      {favoriteProducts.includes(product.id) ? (
-                        <FaHeart size={24} />
-                      ) : (
-                        <FaRegHeart size={24} />
-                      )}
-                    </button>
+                      token={token} // Passando o token para o FavoriteButton
+                      onLoginRequired={handleLoginRequired} // Passando a função de login
+                    />
                   </div>
                   <div className="p-4 flex flex-col flex-grow justify-between">
                     <div className="flex-grow">
