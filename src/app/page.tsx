@@ -224,8 +224,8 @@ const ProductsList: React.FC = () => {
                     <FavoriteButton
                       isFavorite={favoriteProducts.includes(product.id)}
                       onClick={() => toggleFavorite(product.id)}
-                      token={token} // Passando o token para o FavoriteButton
-                      onLoginRequired={handleLoginRequired} // Passando a função de login
+                      token={token} 
+                      onLoginRequired={handleLoginRequired}
                     />
                   </div>
                   <div className="p-4 flex flex-col flex-grow justify-between">
