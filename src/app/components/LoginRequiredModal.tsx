@@ -1,4 +1,3 @@
-// src/app/components/LoginRequiredModal.tsx
 import React from 'react';
 
 interface LoginRequiredModalProps {

@@ -1,12 +1,6 @@
 'use client'
 import React, { useEffect, useState, memo } from 'react'
-import {
-  FaWhatsapp,
-  FaHeart,
-  FaRegHeart,
-  FaSearch,
-  FaSpinner,
-} from 'react-icons/fa'
+import { FaWhatsapp, FaHeart, FaRegHeart, FaSpinner } from 'react-icons/fa'
 import { getProducts, Product } from '../app/api'
 import CategoryFilter from '../app/components/categoryFilter'
 import ImageModal from '../app/components/imageModal'
@@ -14,6 +8,8 @@ import Alert from '../app/components/alert'
 import { parseCookies } from 'nookies'
 import Image from 'next/image'
 import LoginRequiredModal from '../app/components/LoginRequiredModal'
+import SearchInput from '../app/components/SearchInput'
+
 const ProductsList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
@@ -189,16 +185,10 @@ const ProductsList: React.FC = () => {
       )}
 
       <div className="flex justify-center mt-14 mb-6">
-        <div className="relative w-full md:w-1/2">
-          <input
-            type="text"
-            placeholder="Pesquise por nome do produto..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border rounded pl-10 focus:outline-none focus:border-[#61B785]"
-          />
-          <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-        </div>
+        <SearchInput
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
       <div className="flex flex-col md:flex-row">
