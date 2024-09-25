@@ -1,8 +1,7 @@
 import React from 'react';
 import Modal from './modal';
-import Image from 'next/image';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
-import { FaSearchPlus, FaSearchMinus } from 'react-icons/fa';
+import InnerImageZoom from 'react-inner-image-zoom';
+import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css';
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -15,43 +14,15 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl, altT
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex flex-col items-center justify-center animate-fadeIn">
-        <TransformWrapper>
-          {({ zoomIn, zoomOut, resetTransform }) => (
-            <>
-              <div className="flex justify-between w-full mb-2 space-x-4">
-                {/* Botões de controle de zoom */}
-                <button
-                  onClick={() => zoomIn()}  
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300"
-                >
-                  <FaSearchPlus size={20} />
-                </button>
-                <button
-                  onClick={() => zoomOut()}  
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300"
-                >
-                  <FaSearchMinus size={20} />
-                </button>
-                <button
-                  onClick={() => resetTransform()}  
-                  className="p-2 bg-gray-200 rounded-full hover:bg-gray-300"
-                >
-                  Reset
-                </button>
-              </div>
-              <TransformComponent>
-                <Image
-                  src={imageUrl}
-                  alt={altText}
-                  width={1000}
-                  height={1000}
-                  className="max-w-full max-h-[80vh] object-contain"
-                  loading="lazy"
-                />
-              </TransformComponent>
-            </>
-          )}
-        </TransformWrapper>
+        <div className="overflow-hidden flex justify-center items-center max-w-full max-h-screen">
+          <InnerImageZoom
+            src={imageUrl}
+            zoomSrc={imageUrl} // Imagem de alta resolução para o zoom
+            alt={altText}
+            className="max-w-full max-h-[80vh] object-contain"  // Limita o tamanho da imagem
+            zoomType="hover"  // Ou "click" para ampliar ao clicar
+          />
+        </div>
       </div>
     </Modal>
   );
