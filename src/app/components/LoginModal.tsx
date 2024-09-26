@@ -145,6 +145,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
 
   const handleOpenForgotPasswordModal = () => {
     setIsForgotPasswordModalOpen(true);
+    onClose();
   };
 
   const handleCloseForgotPasswordModal = () => {
