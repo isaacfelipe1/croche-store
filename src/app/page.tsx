@@ -1,93 +1,87 @@
-'use client'
+'use client';
 
-import React, { useEffect, useState, memo } from 'react'
-import { FaWhatsapp, FaSpinner } from 'react-icons/fa'
-import { getProducts, Product } from '../app/api'
-import CategoryFilter from '../app/components/categoryFilter'
-import ImageModal from '../app/components/imageModal'
-import Alert from '../app/components/alert'
-import { parseCookies } from 'nookies'
-import Image from 'next/image'
-import LoginRequiredModal from '../app/components/LoginRequiredModal'
-import SearchInput from '../app/components/SearchInput'
-import FavoriteButton from './components/FavoriteButton'
+import React, { useEffect, useState, memo } from 'react';
+import { FaWhatsapp, FaSpinner } from 'react-icons/fa';
+import { getProducts, Product } from '../app/api';
+import CategoryFilter from '../app/components/categoryFilter';
+import ImageModal from '../app/components/imageModal';
+import Alert from '../app/components/alert';
+import { parseCookies } from 'nookies';
+import Image from 'next/image';
+import LoginRequiredModal from '../app/components/LoginRequiredModal';
+import SearchInput from '../app/components/SearchInput';
+import FavoriteButton from './components/FavoriteButton';
 
 const ProductsList: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([])
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-  const [selectedCategory, setSelectedCategory] = useState<string>('')
-  const [searchTerm, setSearchTerm] = useState<string>('')
-  const [visibleCount, setVisibleCount] = useState<number>(6)
-  const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false)
-  const [currentImage, setCurrentImage] = useState<{
-    url: string
-    alt: string
-  } | null>(null)
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
-  const [alertMessage, setAlertMessage] = useState<string | null>(null)
-  const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null)
-  const [favoriteProducts, setFavoriteProducts] = useState<number[]>([])
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false)
-  const [modalMessage, setModalMessage] = useState<string | null>(null)
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [visibleCount, setVisibleCount] = useState<number>(6);
+  const [isImageModalOpen, setIsImageModalOpen] = useState<boolean>(false);
+  const [currentImage, setCurrentImage] = useState<{ url: string; alt: string } | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [purchaseFeedback, setPurchaseFeedback] = useState<string | null>(null);
+  const [favoriteProducts, setFavoriteProducts] = useState<number[]>([]);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+  const [modalMessage, setModalMessage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await getProducts()
-        const formattedData = data.map((product) => ({
-          ...product,
-          price: parseFloat(product.price.toString()),
-        }))
-        setProducts(formattedData)
-        setFilteredProducts(formattedData)
+        const data = await getProducts();
+        setProducts(data);
+        setFilteredProducts(data);
       } catch (error) {
-        setError('Erro ao carregar produtos')
+        setError('Erro ao carregar produtos');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
+    };
+
+    fetchProducts();
+
+    // Verificar o token ao carregar a página
+    const cookies = parseCookies();
+    const token = cookies.token;
+    
+    if (token) {
+      setIsLoggedIn(true); // Atualiza o estado de login
     }
 
-    fetchProducts()
+    // Carregar favoritos do localStorage
+    const savedFavorites = JSON.parse(localStorage.getItem('favoriteProducts') || '[]');
+    setFavoriteProducts(savedFavorites);
 
-    const cookies = parseCookies()
-    const token = cookies.token
-    setIsLoggedIn(!!token)
-
-    const savedFavorites = JSON.parse(
-      localStorage.getItem('favoriteProducts') || '[]',
-    )
-    setFavoriteProducts(savedFavorites)
-
+    // Monitora mudanças no localStorage para login
     const handleStorageChange = () => {
-      const cookies = parseCookies()
-      const updatedToken = cookies.token
-      setIsLoggedIn(!!updatedToken)
-    }
+      const updatedToken = parseCookies().token;
+      setIsLoggedIn(!!updatedToken);
+    };
 
-    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange)
-    }
-  }, [])
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
-    let filtered = products
+    let filtered = products;
     if (selectedCategory) {
-      filtered = filtered.filter(
-        (product) => product.category === selectedCategory,
-      )
+      filtered = filtered.filter((product) => product.category === selectedCategory);
     }
     if (searchTerm) {
       filtered = filtered.filter((product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
+      );
     }
 
-    setFilteredProducts(filtered)
-  }, [selectedCategory, searchTerm, products])
+    setFilteredProducts(filtered);
+  }, [selectedCategory, searchTerm, products]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -95,68 +89,76 @@ const ProductsList: React.FC = () => {
         window.innerHeight + document.documentElement.scrollTop >=
         document.documentElement.offsetHeight - 100
       ) {
-        setVisibleCount((prevCount) => prevCount + 6)
+        setVisibleCount((prevCount) => prevCount + 6);
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const toggleFavorite = (productId: number) => {
-    const updatedFavorites = favoriteProducts.includes(productId)
-      ? favoriteProducts.filter((id) => id !== productId)
-      : [...favoriteProducts, productId]
-
-    setFavoriteProducts(updatedFavorites)
-    localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites))
-  }
-
-  const handleLoginRequired = () => {
-    setModalMessage('Você precisa estar logado para favoritar um produto.')
-    setIsLoginModalOpen(true)
-  }
-
-  const handleWhatsappRedirect = (product: Product) => {
-    const token = parseCookies().token
+    const cookies = parseCookies(); // Verificar o token na ação
+    const token = cookies.token;
 
     if (!token) {
-      setModalMessage('Você precisa estar logado para realizar a compra.')
-      setIsLoginModalOpen(true)
-      return
+      setModalMessage('Você precisa estar logado para favoritar um produto.');
+      setIsLoginModalOpen(true);
+      return;
     }
 
-    const phoneNumber = '5592991928559'
+    const updatedFavorites = favoriteProducts.includes(productId)
+      ? favoriteProducts.filter((id) => id !== productId)
+      : [...favoriteProducts, productId];
+
+    setFavoriteProducts(updatedFavorites);
+    localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites));
+  };
+
+  const handleLoginRequired = () => {
+    setModalMessage('Você precisa estar logado para favoritar um produto.');
+    setIsLoginModalOpen(true);
+  };
+
+  const handleWhatsappRedirect = (product: Product) => {
+    const cookies = parseCookies();
+    const token = cookies.token;
+
+    if (!token) {
+      setModalMessage('Você precisa estar logado para realizar a compra.');
+      setIsLoginModalOpen(true);
+      return;
+    }
+
+    const phoneNumber = '5592991928559';
     const message = `Olá!\nEstou interessado em comprar o produto: *${product.name}*\nCor: _${product.color}_\nPreço: *R$${product.price.toLocaleString(
       'pt-BR',
       {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       },
-    )}*\nO produto é este: ${product.imageUrl}`
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
-    window.open(whatsappURL, '_blank')
+    )}*\nO produto é este: ${product.imageUrl}`;
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappURL, '_blank');
 
-    setPurchaseFeedback('Redirecionando para o WhatsApp...')
-    setTimeout(() => setPurchaseFeedback(null), 3000)
-  }
+    setPurchaseFeedback('Redirecionando para o WhatsApp...');
+    setTimeout(() => setPurchaseFeedback(null), 3000);
+  };
 
   const openImageModal = (imageUrl: string, altText: string) => {
-    setCurrentImage({ url: imageUrl, alt: altText })
-    setIsImageModalOpen(true)
-  }
+    setCurrentImage({ url: imageUrl, alt: altText });
+    setIsImageModalOpen(true);
+  };
 
   const closeImageModal = () => {
-    setCurrentImage(null)
-    setIsImageModalOpen(false)
-  }
+    setCurrentImage(null);
+    setIsImageModalOpen(false);
+  };
 
-  const categories = Array.from(
-    new Set(products.map((product) => product.category)),
-  )
+  const categories = Array.from(new Set(products.map((product) => product.category)));
 
   if (loading)
     return (
@@ -164,10 +166,9 @@ const ProductsList: React.FC = () => {
         <FaSpinner className="animate-spin text-4xl text-[#432721]" />
         <p className="ml-2 text-center text-lg mt-4">Carregando produtos...</p>
       </div>
-    )
-  if (error) return <p className="text-center text-red-500 mt-4">{error}</p>
+    );
+  if (error) return <p className="text-center text-red-500 mt-4">{error}</p>;
 
-  const token = parseCookies().token; 
   return (
     <div className="container mx-auto px-4 py-8">
       {isLoginModalOpen && modalMessage && (
@@ -177,19 +178,12 @@ const ProductsList: React.FC = () => {
         />
       )}
 
-      {alertMessage && (
-        <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />
-      )}
+      {alertMessage && <Alert message={alertMessage} onClose={() => setAlertMessage(null)} />}
 
-      {purchaseFeedback && (
-        <p className="text-center text-green-500 mb-4">{purchaseFeedback}</p>
-      )}
+      {purchaseFeedback && <p className="text-center text-green-500 mb-4">{purchaseFeedback}</p>}
 
       <div className="flex justify-center mt-14 mb-6">
-        <SearchInput
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <SearchInput value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
       </div>
 
       <div className="flex flex-col md:flex-row">
@@ -216,14 +210,11 @@ const ProductsList: React.FC = () => {
                       className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
                       width={500}
                       height={500}
-                      onClick={() =>
-                        openImageModal(product.imageUrl, product.name)
-                      }
+                      onClick={() => openImageModal(product.imageUrl, product.name)}
                     />
                     <FavoriteButton
                       isFavorite={favoriteProducts.includes(product.id)}
                       onClick={() => toggleFavorite(product.id)}
-                      token={token} 
                       onLoginRequired={handleLoginRequired}
                     />
                   </div>
@@ -243,52 +234,39 @@ const ProductsList: React.FC = () => {
                         </span>
                       </p>
 
-                      {typeof product.description === 'string' &&
-                        product.description.trim() ===
-                          'Feito por encomenda' && (
-                          <p className="text-sm text-[#432721] mb-2 font-bold">
-                            {product.description}
-                          </p>
-                        )}
+                      {typeof product.description === 'string' && product.description.trim() === 'Feito por encomenda' && (
+                        <p className="text-sm text-[#432721] mb-2 font-bold">
+                          {product.description}
+                        </p>
+                      )}
 
                       <p className="text-sm text-[#432721] mb-2 font-bold">
-                        Cor:{' '}
-                        <span className="font-medium">{product.color}</span>
+                        Cor: <span className="font-medium">{product.color}</span>
                       </p>
                       <p className="text-sm text-[#432721] mb-2 font-bold">
-                        Tamanho:{' '}
-                        <span className="font-medium">{product.size}</span>{' '}
+                        Tamanho: <span className="font-medium">{product.size}</span>{' '}
                       </p>
                     </div>
 
                     <div className="mt-auto">
-                      {typeof product.description === 'string' &&
-                        product.description.trim() ===
-                          'Feito por encomenda' && (
-                          <button
-                            onClick={() => handleWhatsappRedirect(product)}
-                            className="w-full py-2 px-4 bg-[#61B785] text-white rounded hover:bg-[#734230] transition-colors duration-200"
-                          >
-                            Encomendar
-                          </button>
-                        )}
-
-                      {product.description.trim() !== 'Feito por encomenda' && (
+                      {typeof product.description === 'string' && product.description.trim() === 'Feito por encomenda' ? (
+                        <button
+                          onClick={() => handleWhatsappRedirect(product)}
+                          className="w-full py-2 px-4 bg-[#61B785] text-white rounded hover:bg-[#734230] transition-colors duration-200"
+                        >
+                          Encomendar
+                        </button>
+                      ) : (
                         <>
                           <p className="text-sm text-[#432721] mb-2 font-bold">
-                            Quantidade:{' '}
-                            <span className="font-medium">
-                              {product.stockQuantity} Un
-                            </span>
+                            Quantidade: <span className="font-medium">{product.stockQuantity} Un</span>
                           </p>
                           {product.stockQuantity < 2 ? (
                             <p className="text-[#E56446] font-bold text-sm mb-2">
                               Compre já, poucas unidades!
                             </p>
                           ) : (
-                            <p className="text-[#61B785] font-bold text-sm mb-2">
-                              Em estoque
-                            </p>
+                            <p className="text-[#61B785] font-bold text-sm mb-2">Em estoque</p>
                           )}
                           <button
                             onClick={() => handleWhatsappRedirect(product)}
@@ -304,23 +282,16 @@ const ProductsList: React.FC = () => {
               ))}
             </ul>
           ) : (
-            <p className="text-center text-red-500">
-              Nenhum produto encontrado com o nome informado.
-            </p>
+            <p className="text-center text-red-500">Nenhum produto encontrado com o nome informado.</p>
           )}
         </div>
       </div>
 
       {currentImage && (
-        <ImageModal
-          isOpen={isImageModalOpen}
-          onClose={closeImageModal}
-          imageUrl={currentImage.url}
-          altText={currentImage.alt}
-        />
+        <ImageModal isOpen={isImageModalOpen} onClose={closeImageModal} imageUrl={currentImage.url} altText={currentImage.alt} />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default memo(ProductsList)
+export default memo(ProductsList);
