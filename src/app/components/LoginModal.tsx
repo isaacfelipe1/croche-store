@@ -176,12 +176,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
           <h2 className="text-3xl font-semibold text-center mb-6 text-[#734230] dark:text-white">Login</h2>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <form onSubmit={handleLogin}>
-            <div className="mb-5">
+            <div className="mb-4">
               <label htmlFor="email" className="block text-gray-600 dark:text-gray-300 font-medium mb-1">Email</label>
               <input
                 type="email"
                 id="email"
-                className={`w-full px-4 py-3 border ${isEmailValid ? 'border-gray-300' : 'border-red-500'} rounded-lg focus:outline-none focus:ring-2 ${isEmailValid ? 'focus:ring-[#61B785]' : 'focus:ring-red-500'} transition`}
+                className={`w-full px-3 py-2 border ${isEmailValid ? 'border-gray-300' : 'border-red-500'} rounded-lg focus:outline-none focus:ring-2 ${isEmailValid ? 'focus:ring-[#61B785]' : 'focus:ring-red-500'} transition`}
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -197,7 +197,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#61B785] transition"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#61B785] transition"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
