@@ -171,7 +171,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md mx-auto animate-slideIn">
+      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm mx-auto animate-slideIn">
+
           <h2 className="text-3xl font-semibold text-center mb-6 text-[#734230] dark:text-white">Login</h2>
           {error && <p className="text-red-500 text-center mb-4">{error}</p>}
           <form onSubmit={handleLogin}>
