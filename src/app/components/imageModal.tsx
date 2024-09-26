@@ -22,6 +22,8 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl, altT
               alt={altText}
               className="max-w-full max-h-[80vh] object-contain"  
               style={{ width: 'auto', height: 'auto' }}  
+              width={500}
+              height={500}
             />
           </Zoom>
         </div>
