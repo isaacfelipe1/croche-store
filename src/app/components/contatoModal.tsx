@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Modal from './modal';
 
 interface ContatoModalProps {
@@ -27,4 +27,4 @@ const ContatoModal: React.FC<ContatoModalProps> = ({ isOpen, onClose }) => {
   );
 };
 
-export default ContatoModal;
+export default memo(ContatoModal);
