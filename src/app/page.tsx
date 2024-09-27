@@ -118,14 +118,10 @@ const ProductsList: React.FC = () => {
     setFavoriteProducts(updatedFavorites);
     localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites));
   }, [favoriteProducts]);
-
-  const debouncedSearch = useCallback(
-    debounce((term: string) => {
-      setSearchTerm(term);
-    }, 300),
-    []
+  const debouncedSearch = useMemo(
+    () => debounce((term: string) => setSearchTerm(term), 300),
+    [setSearchTerm]
   );
-
   const handleWhatsappRedirect = useCallback((product: Product) => {
     const cookies = parseCookies();
     const token = cookies.token;
@@ -213,7 +209,7 @@ const ProductsList: React.FC = () => {
                       className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
                       width={500}
                       height={500}
-                      loading="lazy" // Carregamento lazy das imagens
+                      loading="lazy" 
                       onClick={() => openImageModal(product.imageUrl, product.name)}
                     />
                     <FavoriteButton
