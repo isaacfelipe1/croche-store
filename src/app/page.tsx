@@ -166,6 +166,7 @@ const ProductsList: React.FC = () => {
         <p className="ml-2 text-center text-lg mt-4">Carregando produtos...</p>
       </div>
     );
+   
   if (error) return <p className="text-center text-red-500 mt-4">{error}</p>;
 
   return (
