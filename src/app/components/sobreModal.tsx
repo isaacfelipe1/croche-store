@@ -1,6 +1,6 @@
 
 "use client"
-import React from 'react'
+import React, { memo } from 'react';
 import Modal from './modal'
 
 interface SobreModalProps {
@@ -22,4 +22,4 @@ const SobreModal: React.FC<SobreModalProps> = ({ isOpen, onClose }) => {
   )
 }
 
-export default SobreModal
+export default memo(SobreModal);

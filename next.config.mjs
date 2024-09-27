@@ -19,11 +19,11 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: '/_next/image(.*)', // Aplica o cache a todas as imagens otimizadas pelo Next.js
+        source: '/_next/image(.*)', 
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable', // Cache por 1 ano
+            value: 'public, max-age=31536000, immutable', 
           },
         ],
       },
