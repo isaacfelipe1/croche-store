@@ -1,20 +1,23 @@
 'use client';
 
-import React, { useEffect, useState, memo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { FaWhatsapp, FaSpinner } from 'react-icons/fa';
 import { getProducts, Product } from '../app/api';
+import dynamic from 'next/dynamic';
 import CategoryFilter from '../app/components/categoryFilter';
-import ImageModal from '../app/components/imageModal';
-import Alert from '../app/components/alert';
 import { parseCookies } from 'nookies';
 import Image from 'next/image';
-import LoginRequiredModal from '../app/components/LoginRequiredModal';
-import SearchInput from '../app/components/SearchInput';
+import debounce from 'lodash/debounce';
 import FavoriteButton from './components/FavoriteButton';
+
+// Carregamento dinâmico dos modais
+const ImageModal = dynamic(() => import('../app/components/imageModal'));
+const LoginRequiredModal = dynamic(() => import('../app/components/LoginRequiredModal'));
+const Alert = dynamic(() => import('../app/components/alert'));
+const SearchInput = dynamic(() => import('../app/components/SearchInput'));
 
 const ProductsList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -34,7 +37,6 @@ const ProductsList: React.FC = () => {
       try {
         const data = await getProducts();
         setProducts(data);
-        setFilteredProducts(data);
       } catch (error) {
         setError('Erro ao carregar produtos');
       } finally {
@@ -69,7 +71,7 @@ const ProductsList: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
+  const filteredProducts = useMemo(() => {
     let filtered = products;
     if (selectedCategory) {
       filtered = filtered.filter((product) => product.category === selectedCategory);
@@ -79,8 +81,7 @@ const ProductsList: React.FC = () => {
         product.name.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
-
-    setFilteredProducts(filtered);
+    return filtered;
   }, [selectedCategory, searchTerm, products]);
 
   useEffect(() => {
@@ -100,8 +101,8 @@ const ProductsList: React.FC = () => {
     };
   }, []);
 
-  const toggleFavorite = (productId: number) => {
-    const cookies = parseCookies(); // Verificar o token na ação
+  const toggleFavorite = useCallback((productId: number) => {
+    const cookies = parseCookies(); 
     const token = cookies.token;
 
     if (!token) {
@@ -116,14 +117,16 @@ const ProductsList: React.FC = () => {
 
     setFavoriteProducts(updatedFavorites);
     localStorage.setItem('favoriteProducts', JSON.stringify(updatedFavorites));
-  };
+  }, [favoriteProducts]);
 
-  const handleLoginRequired = () => {
-    setModalMessage('Você precisa estar logado para favoritar um produto.');
-    setIsLoginModalOpen(true);
-  };
+  const debouncedSearch = useCallback(
+    debounce((term: string) => {
+      setSearchTerm(term);
+    }, 300),
+    []
+  );
 
-  const handleWhatsappRedirect = (product: Product) => {
+  const handleWhatsappRedirect = useCallback((product: Product) => {
     const cookies = parseCookies();
     const token = cookies.token;
 
@@ -146,19 +149,19 @@ const ProductsList: React.FC = () => {
 
     setPurchaseFeedback('Redirecionando para o WhatsApp...');
     setTimeout(() => setPurchaseFeedback(null), 3000);
-  };
+  }, []);
 
-  const openImageModal = (imageUrl: string, altText: string) => {
+  const openImageModal = useCallback((imageUrl: string, altText: string) => {
     setCurrentImage({ url: imageUrl, alt: altText });
     setIsImageModalOpen(true);
-  };
+  }, []);
 
-  const closeImageModal = () => {
+  const closeImageModal = useCallback(() => {
     setCurrentImage(null);
     setIsImageModalOpen(false);
-  };
+  }, []);
 
-  const categories = Array.from(new Set(products.map((product) => product.category)));
+  const categories = useMemo(() => Array.from(new Set(products.map((product) => product.category))), [products]);
 
   if (loading)
     return (
@@ -183,7 +186,7 @@ const ProductsList: React.FC = () => {
       {purchaseFeedback && <p className="text-center text-green-500 mb-4">{purchaseFeedback}</p>}
 
       <div className="flex justify-center mt-14 mb-6">
-        <SearchInput value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+        <SearchInput value={searchTerm} onChange={(e) => debouncedSearch(e.target.value)} />
       </div>
 
       <div className="flex flex-col md:flex-row">
@@ -210,12 +213,13 @@ const ProductsList: React.FC = () => {
                       className="w-full h-48 object-cover transition-transform duration-300 ease-in-out transform hover:scale-105"
                       width={500}
                       height={500}
+                      loading="lazy" // Carregamento lazy das imagens
                       onClick={() => openImageModal(product.imageUrl, product.name)}
                     />
                     <FavoriteButton
                       isFavorite={favoriteProducts.includes(product.id)}
                       onClick={() => toggleFavorite(product.id)}
-                      onLoginRequired={handleLoginRequired}
+                      onLoginRequired={() => setModalMessage('Você precisa estar logado para favoritar um produto.')}
                     />
                   </div>
                   <div className="p-4 flex flex-col flex-grow justify-between">
@@ -233,8 +237,7 @@ const ProductsList: React.FC = () => {
                           })}
                         </span>
                       </p>
-
-                      {typeof product.description === 'string' && product.description.trim() === 'Feito por encomenda' && (
+                      {product.description === 'Feito por encomenda' && (
                         <p className="text-sm text-[#432721] mb-2 font-bold">
                           {product.description}
                         </p>
@@ -249,7 +252,7 @@ const ProductsList: React.FC = () => {
                     </div>
 
                     <div className="mt-auto">
-                      {typeof product.description === 'string' && product.description.trim() === 'Feito por encomenda' ? (
+                      {product.description === 'Feito por encomenda' ? (
                         <button
                           onClick={() => handleWhatsappRedirect(product)}
                           className="w-full py-2 px-4 bg-[#61B785] text-white rounded hover:bg-[#734230] transition-colors duration-200"
@@ -294,4 +297,4 @@ const ProductsList: React.FC = () => {
   );
 };
 
-export default memo(ProductsList);
+export default React.memo(ProductsList);
