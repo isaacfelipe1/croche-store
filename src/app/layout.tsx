@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import dynamic from "next/dynamic";
 import "./globals.css";
-import Footer from '../app/components/footer';
-import Navbar from '../app/components/navbar'; 
+
+// Carregamento dinâmico do Navbar e Footer
+const Navbar = dynamic(() => import('../app/components/navbar'), { ssr: false });
+const Footer = dynamic(() => import('../app/components/footer'), { ssr: false });
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,6 +51,11 @@ export default function RootLayout({
       <head>
         {/* Meta tag de verificação do Google */}
         <meta name="google-site-verification" content="AVrxxVnnTxjRMLjb33XhOwBh-ig3hG6XRFs0FcOA9zk" />
+        
+        {/* Mantemos o preload da fonte Inter apenas se ela for estática */}
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" as="style" />
+
+        {/* Favicon */}
         <link rel="icon" href="https://croche-store1.s3.us-east-2.amazonaws.com/NovaLogoAmorECroche.png" />
 
         {/* Google Analytics */}
