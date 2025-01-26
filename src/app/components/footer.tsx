@@ -7,11 +7,11 @@ const Footer = () => {
   return (
     <footer className="bg-[#432721] text-white text-center py-5 w-full mt-auto">
       <p className="text-[#F1E4A6]">
-        &copy; {currentYear} loja de crochê. - Todos os direitos reservados.
+        &copy; {currentYear} loja de crochê - Todos os direitos reservados.
       </p>
-      <p className="text-[#E56446] hover:text-[#61B785] transition-colors duration-300">
+      {/* <p className="text-[#E56446] hover:text-[#61B785] transition-colors duration-300">
         Desenvolvido para você comprar seus produtos!
-      </p>
+      </p> */}
       <div className="flex justify-center mt-4">
         <a
           href="https://www.facebook.com/people/Amor-Croch%C3%AA/100095593387200/?mibextid=ZbWKwL"
@@ -22,7 +22,12 @@ const Footer = () => {
             className="text-[#F1E4A6] hover:text-[#61B785] transition-colors duration-300"
             size={24}
           />
+          
+          
         </a>
+        
+
+        
       </div>
     </footer>
   );
