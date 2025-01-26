@@ -214,7 +214,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
             </div>
             <button
               type="submit"
-              className={`w-full bg-[#61B785] text-white py-3 rounded-lg font-semibold hover:bg-[#734230] transition-colors duration-200 shadow-md hover:shadow-lg flex justify-center items-center ${
+              className={`w-full bg-[#61B785] text-white py-3 rounded-lg font-semibold hover:bg-[#390D0C] transition-colors duration-200 shadow-md hover:shadow-lg flex justify-center items-center ${
                 isLoading ? 'cursor-not-allowed opacity-50' : ''
               }`}
               disabled={isLoading}
@@ -226,9 +226,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
               )}
             </button>
           </form>
-          <button onClick={toggleTheme} className="mt-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center justify-center">
+          {/* <button onClick={toggleTheme} className="mt-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center justify-center">
             {theme === 'dark' ? <FaSun size={20} /> : <FaMoon size={20} />}
-          </button>
+          </button> */}
           <p className="mt-4 text-center text-gray-600 dark:text-gray-300">Esqueceu sua senha? 
             <button onClick={handleOpenForgotPasswordModal} className="text-[#734230] dark:text-white font-semibold hover:underline ml-1">
               Recuperar senha
