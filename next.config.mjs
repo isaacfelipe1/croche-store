@@ -29,6 +29,20 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/painel',
+        destination: '/',
+        permanent: false,
+      },
+      {
+        source: '/admin',
+        destination: '/',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

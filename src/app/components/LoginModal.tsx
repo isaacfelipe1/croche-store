@@ -214,7 +214,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginSuccess
             </div>
             <button
               type="submit"
-              className={`w-full bg-[#61B785] text-white py-3 rounded-lg font-semibold hover:bg-[#734230] transition-colors duration-200 shadow-md hover:shadow-lg flex justify-center items-center ${
+              className={`w-full bg-[#61B785] text-white py-3 rounded-lg font-semibold hover:bg-[#390D0C] transition-colors duration-200 shadow-md hover:shadow-lg flex justify-center items-center ${
                 isLoading ? 'cursor-not-allowed opacity-50' : ''
               }`}
               disabled={isLoading}
