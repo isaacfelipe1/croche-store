@@ -188,12 +188,11 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 bg-[#432721] text-[#F1E4A6] px-6 py-4 z-50">
+      <nav className="fixed top-0 left-0 right-0 bg-[#390D0C] text-[#F1E4A6] px-6 py-1 z-50">
         <div className="container mx-auto flex justify-between items-center">
           <div className="text-2xl font-bold">
-            <Link href="/">Crochê Store</Link>
+          <img src="/logo-croche.jpg" alt="Logo" className="w-16 h-16 rounded-full" />
           </div>
-
           <div className="hidden lg:flex lg:items-center">
             <p className="text-[#F1E4A6] text-sm mr-6 flex items-center">
               <FaWhatsapp className="mr-2 text-xl text-[#E56446]" />
@@ -271,7 +270,7 @@ const Navbar: React.FC = () => {
         {/* Menu mobile */}
         <div
           ref={menuRef} 
-          className={`fixed top-0 right-0 h-full w-64 bg-[#432721] text-[#F1E4A6] z-50 transform lg:hidden transition-transform duration-300 ease-in-out ${
+          className={`fixed top-0 right-0 h-full w-64 bg-[#390D0C] text-[#F1E4A6] z-50 transform lg:hidden transition-transform duration-300 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           style={{ height: '100vh', overflowY: 'auto' }} 
