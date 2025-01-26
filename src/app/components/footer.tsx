@@ -5,7 +5,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear(); 
 
   return (
-    <footer className="bg-[#432721] text-white text-center py-5 w-full mt-auto">
+    <footer className="bg-[#390D0C] text-white text-center py-5 w-full mt-auto">
       <p className="text-[#F1E4A6]">
         &copy; {currentYear} loja de crochê - Todos os direitos reservados.
       </p>

@@ -270,7 +270,7 @@ const Navbar: React.FC = () => {
         {/* Menu mobile */}
         <div
           ref={menuRef} 
-          className={`fixed top-0 right-0 h-full w-64 bg-[#432721] text-[#F1E4A6] z-50 transform lg:hidden transition-transform duration-300 ease-in-out ${
+          className={`fixed top-0 right-0 h-full w-64 bg-[#390D0C] text-[#F1E4A6] z-50 transform lg:hidden transition-transform duration-300 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           style={{ height: '100vh', overflowY: 'auto' }} 
