@@ -25,12 +25,11 @@ const EditProfile: React.FC = () => {
   useEffect(() => {
     const cookies = parseCookies();
     const token = cookies.token;
-    const storedUserId = cookies.userId; 
+    const storedUserId = cookies.userId;
 
     if (storedUserId && token) {
       setUserId(storedUserId);
     } else {
-     
       router.push('/login');
     }
   }, [router]);
@@ -118,130 +117,143 @@ const EditProfile: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-15 p-20 bg-white rounded shadow">
-      <h2 className="text-2xl font-semibold mb-4 text-gray-800">
-        Configuração
-      </h2>
-      <form onSubmit={handleUpdate}>
-        <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-800"
-          >
-            Email
-          </label>
-          <div className="flex items-center mt-1 border rounded">
-            <FiMail className="ml-2 text-gray-500" />
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="block w-full p-2 border-none focus:outline-none"
-            />
-          </div>
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="nome"
-            className="block text-sm font-medium text-gray-800"
-          >
-            Nome
-          </label>
-          <div className="flex items-center mt-1 border rounded">
-            <FiUser className="ml-2 text-gray-500" />
-            <input
-              type="text"
-              id="nome"
-              value={nome}
-              onChange={(e) => setNome(e.target.value)}
-              className="block w-full p-2 border-none focus:outline-none"
-            />
-          </div>
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="currentPassword"
-            className="block text-sm font-medium text-gray-800"
-          >
-            Senha Atual
-          </label>
-          <div className="flex items-center mt-1 border rounded relative">
-            <FiLock className="ml-2 text-gray-500" />
-            <input
-              type={showCurrentPassword ? 'text' : 'password'}
-              id="currentPassword"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              className="block w-full p-2 border-none focus:outline-none"
-            />
-            <button
-              type="button"
-              className="absolute right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-              onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gray-100 px-4 lg:px-20">
+      {/* Seção lateral para desktop */}
+      <div className="hidden lg:block lg:w-1/2 max-w-lg p-10 bg-white rounded-lg shadow-lg text-gray-800 mr-8">
+        <h2 className="text-3xl font-bold mb-6">Configuração de Perfil</h2>
+        <p className="text-lg leading-relaxed">
+          Aqui você pode atualizar seus dados de perfil e senha. Por favor, preencha os campos corretamente para evitar erros. Certifique-se de salvar suas alterações antes de sair.
+        </p>
+      </div>
+
+      {/* Seção do formulário */}
+      <div className="w-full lg:w-1/2 max-w-xl p-8 bg-white rounded-lg shadow-lg">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">Configuração</h2>
+        <form onSubmit={handleUpdate} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-800"
             >
-              {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+              Email
+            </label>
+            <div className="flex items-center mt-1 border rounded">
+              <FiMail className="ml-2 text-gray-500" />
+              <input
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="block w-full p-2 border-none focus:outline-none"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              htmlFor="nome"
+              className="block text-sm font-medium text-gray-800"
+            >
+              Nome
+            </label>
+            <div className="flex items-center mt-1 border rounded">
+              <FiUser className="ml-2 text-gray-500" />
+              <input
+                type="text"
+                id="nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                className="block w-full p-2 border-none focus:outline-none"
+              />
+            </div>
+          </div>
+          <div>
+            <label
+              htmlFor="currentPassword"
+              className="block text-sm font-medium text-gray-800"
+            >
+              Senha Atual
+            </label>
+            <div className="flex items-center mt-1 border rounded relative">
+              <FiLock className="ml-2 text-gray-500" />
+              <input
+                type={showCurrentPassword ? 'text' : 'password'}
+                id="currentPassword"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                className="block w-full p-2 border-none focus:outline-none"
+              />
+              <button
+                type="button"
+                className="absolute right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+              >
+                {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+          </div>
+          <div>
+            <label
+              htmlFor="newPassword"
+              className="block text-sm font-medium text-gray-800"
+            >
+              Nova Senha
+            </label>
+            <div className="flex items-center mt-1 border rounded relative">
+              <FiLock className="ml-2 text-gray-500" />
+              <input
+                type={showNewPassword ? 'text' : 'password'}
+                id="newPassword"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="block w-full p-2 border-none focus:outline-none"
+              />
+              <button
+                type="button"
+                className="absolute right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+              >
+                {showNewPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+          </div>
+          <div className="lg:col-span-2">
+            <button
+              type="submit"
+              className={`w-full py-3 px-4 rounded hover:bg-blue-700 ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              style={{ backgroundColor: '#61B785', color: '#FFFFFF' }}
+              disabled={isLoading}
+            >
+              {isLoading ? 'Atualizando...' : 'Atualizar Perfil'}
+            </button>
+            <button
+              onClick={handleDeleteAccount}
+              className="w-full py-3 px-4 rounded hover:bg-red-700 mt-4"
+              style={{ backgroundColor: '#734230', color: '#FFFFFF' }}
+              type="button"
+            >
+              Excluir Conta
             </button>
           </div>
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="newPassword"
-            className="block text-sm font-medium text-gray-800"
-          >
-            Nova Senha
-          </label>
-          <div className="flex items-center mt-1 border rounded relative">
-            <FiLock className="ml-2 text-gray-500" />
-            <input
-              type={showNewPassword ? 'text' : 'password'}
-              id="newPassword"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="block w-full p-2 border-none focus:outline-none"
-            />
-            <button
-              type="button"
-              className="absolute right-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-              onClick={() => setShowNewPassword(!showNewPassword)}
-            >
-              {showNewPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
-          </div>
-        </div>
-        <button
-          type="submit"
-          className={`w-full py-2 px-4 rounded hover:bg-blue-700 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          style={{ backgroundColor: '#61B785', color: '#FFFFFF' }}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Atualizando...' : 'Atualizar Perfil'}
-        </button>
-        <button
-          onClick={handleDeleteAccount}
-          className="w-full py-2 px-4 rounded hover:bg-red-700 mt-4"
-          style={{ backgroundColor: '#734230', color: '#FFFFFF' }}
-          type="button"
-        >
-          Excluir Conta
-        </button>
-      </form>
+        </form>
 
-      <AlertModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        title="Mensagem"
-        message={message}
-      />
+        <AlertModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          title="Mensagem"
+          message={message}
+        />
 
-      <AlertModal
-        isOpen={isConfirmModalOpen}
-        onClose={() => setIsConfirmModalOpen(false)}
-        title="Confirmação"
-        message="Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita!"
-        onConfirm={confirmDeleteAccount}
-        confirmButtonText="Excluir"
-      />
+        <AlertModal
+          isOpen={isConfirmModalOpen}
+          onClose={() => setIsConfirmModalOpen(false)}
+          title="Confirmação"
+          message="Tem certeza que deseja excluir sua conta? Esta ação não pode ser desfeita!"
+          onConfirm={confirmDeleteAccount}
+          confirmButtonText="Excluir"
+        />
+      </div>
     </div>
   );
 };
