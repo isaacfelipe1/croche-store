@@ -341,7 +341,6 @@ const Navbar: React.FC = () => {
           )}
         </div>
       </nav>
-
       {/* Modais */}
       <SobreModal isOpen={isSobreModalOpen} onClose={closeSobreModal} />
       <ContatoModal isOpen={isContatoModalOpen} onClose={closeContatoModal} />
