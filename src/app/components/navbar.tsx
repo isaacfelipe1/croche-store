@@ -192,7 +192,10 @@ const Navbar: React.FC = () => {
         <div className="container mx-auto flex justify-between items-center">
         <div className="text-2xl font-bold">
 
-<img src="/logo-crohe.jpg" alt="Logo" className="w-16 h-16 rounded-full" />
+        <a href="/">
+  <img src="/logo-crohe.jpg" alt="Logo" className="w-16 h-16 rounded-full" />
+</a>
+
 </div>
 
           <div className="hidden lg:flex lg:items-center">
