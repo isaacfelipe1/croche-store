@@ -286,7 +286,6 @@ const ProductsList: React.FC = () => {
           )}
         </div>
       </div>
-
       {currentImage && (
         <ImageModal isOpen={isImageModalOpen} onClose={closeImageModal} imageUrl={currentImage.url} altText={currentImage.alt} />
       )}
