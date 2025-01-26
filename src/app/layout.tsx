@@ -10,12 +10,12 @@ const Footer = dynamic(() => import('../app/components/footer'), { ssr: false })
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "loja de crochê",
+  title: "Amor & Crochê",
   description: "Aqui você vai encontrar o melhor crochê para seu lar! Trabalhamos com encomendas e pronta entrega!",
   viewport: "width=device-width, initial-scale=1",
   keywords: ["crochê", "venda", "compra"],
   openGraph: {
-    title: "loja de crochê",
+    title: " Amor & Crochê",
     description: "Aqui você vai encontrar o melhor crochê para seu lar! Trabalhamos com encomendas e pronta entrega!",
     images: [
       {

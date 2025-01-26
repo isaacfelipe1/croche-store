@@ -271,6 +271,7 @@ const ProductsList: React.FC = () => {
                           <button
                             onClick={() => handleWhatsappRedirect(product)}
                             className="w-full py-2 px-4 bg-[#5bb75b] text-white rounded hover:bg-[#44a044] transition-colors duration-200 flex items-center justify-center rounded-full"
+
                           >
                             <FaWhatsapp className="mr-2 text-xl" /> Comprar
                           </button>

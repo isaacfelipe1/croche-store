@@ -10,7 +10,6 @@ interface ImageModalProps {
   imageUrl: string;
   altText: string;
 }
-
 const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl, altText }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -27,12 +26,8 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, imageUrl, altT
             />
           </Zoom>
         </div>
-        {/* <button
-          className="mt-4 p-2 bg-gray-200 rounded-full hover:bg-gray-300 flex items-center"
-        >
-          <FaSearchPlus size={20} />
-          <span className="ml-2"> Clique na imagem para ampliar</span>
-        </button> */}
+        
+main
       </div>
     </Modal>
   );

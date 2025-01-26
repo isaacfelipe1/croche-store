@@ -1,6 +1,11 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /painel
+Disallow: /admin
+Disallow: /editar
+Disallow: /excluir
+Disallow: /listar
 
 # Host
 Host: https://croche-store.vercel.app/
